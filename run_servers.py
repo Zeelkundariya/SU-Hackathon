@@ -25,9 +25,9 @@ def run_server(name, directory, command, env_vars):
     return process
 
 # Env vars for backend
-backend_env = {"PORT": "5000"}
+backend_env = {"PORT": "3000"}
 # Env vars for frontend
-frontend_env = {"BROWSER": "none", "PORT": "3000"}
+frontend_env = {"BROWSER": "none", "PORT": "3001"}
 
 # Start backend
 backend_proc = run_server("Backend", backend_dir, "node server.js", backend_env)

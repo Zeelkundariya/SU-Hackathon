@@ -9,7 +9,7 @@ const OwnerPortal = () => {
 
     const fetchRequests = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/ai/requests');
+            const res = await axios.get('http://localhost:3001/api/ai/requests');
             setRequests(res.data.filter(r => r.status === 'Pending'));
             setLoading(false);
         } catch (err) {
@@ -30,7 +30,7 @@ const OwnerPortal = () => {
 
     const handleAction = async (id, status) => {
         try {
-            await axios.put(`http://localhost:5000/api/ai/request/${id}`, { status });
+            await axios.put(`http://localhost:3001/api/ai/request/${id}`, { status });
             fetchRequests();
         } catch (err) {
             console.error('Error updating request:', err);
@@ -132,15 +132,15 @@ const OwnerPortal = () => {
 
                 {/* Main Action Feed */}
                 <main className="flex-1">
-                    <div className="flex items-center justify-between mb-6 px-2">
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 px-2">
                         <div className="flex items-center gap-3">
                             <h2 className="text-sm font-black tracking-[0.2em] text-indigo-400 uppercase">Approval Stack</h2>
-                            <div className="h-5 w-px bg-white/10"></div>
+                            <div className="hidden md:block h-5 w-px bg-white/10"></div>
                             <span className="text-[12px] text-gray-500 font-bold uppercase tracking-tight">{requests.length} Strategic Signals Detected</span>
                         </div>
-                        <div className="relative">
+                        <div className="relative w-full md:w-auto">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={14} />
-                            <input type="text" placeholder="Search signals..." className="bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-xs w-48 focus:outline-none focus:border-indigo-500/50 transition-all focus:w-60" />
+                            <input type="text" placeholder="Search signals..." className="bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-xs w-full md:w-48 focus:outline-none focus:border-indigo-500/50 transition-all focus:md:w-60" />
                         </div>
                     </div>
 
@@ -227,7 +227,7 @@ const OwnerPortal = () => {
                                                 </button>
                                                 <button
                                                     onClick={() => handleAction(req._id, 'Approved')}
-                                                    className="flex-1 sm:flex-none shiny-button h-14 bg-indigo-600 hover:bg-indigo-500 rounded-2xl px-10 font-black text-[14px] text-white flex items-center justify-center gap-3 shadow-[0_20px_40px_rgba(79,70,229,0.3)] hover:shadow-[0_25px_50px_rgba(79,70,229,0.5)] transition-all duration-300 active:scale-95 group/approve"
+                                                    className="flex-1 sm:flex-none shiny-button h-14 bg-indigo-600 hover:bg-indigo-500 rounded-2xl px-10 font-black text-[14px] text-white flex items-center justify-center gap-3 shadow-[0_20px_40px_rgba(79,70,229,0.3)] hover:shadow-[0_25px_50px_rgba(79,70,229,0.5)] transition-all duration-300 active:scale-95 group/approve disabled:opacity-50 disabled:cursor-not-allowed"
                                                 >
                                                     <Check size={20} className="group-hover/approve:scale-120 transition-transform" strokeWidth={4} />
                                                     Execute Action
@@ -252,7 +252,7 @@ const OwnerPortal = () => {
                         <div className="flex flex-wrap justify-center lg:justify-start items-center gap-x-12 gap-y-6">
                             <div>
                                 <div className="text-[10px] font-black tracking-widest text-gray-500 uppercase mb-1">Gateway Hub</div>
-                                <div className="text-xs font-bold text-gray-300 tracking-tight">Port 5000 (Neural Engine v4.2)</div>
+                                <div className="text-xs font-bold text-gray-300 tracking-tight">Port 3001 (Neural Engine v4.2)</div>
                             </div>
                             <div>
                                 <div className="text-[10px] font-black tracking-widest text-gray-500 uppercase mb-1">Sovereign Layer</div>
