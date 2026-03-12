@@ -13,6 +13,8 @@ import {
   Box, Network, Mic, Droplet, RefreshCcw, Fingerprint, MessageSquare, ArrowRight, Landmark, BookOpen, FileScan, Sparkles, Recycle, Flame
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { agentsData } from "../data/agentsData"; export default function Dashboard() {
   const navigate = useNavigate();
   // --- AI States ---
@@ -258,6 +260,9 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
   };
 
   // UI States
+  const [isMsmeModalOpen, setIsMsmeModalOpen] = useState(false);
+  const [isClusterModalOpen, setIsClusterModalOpen] = useState(false);
+  const [isSubsidyModalOpen, setIsSubsidyModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [showNotification, setShowNotification] = useState(false);
 
@@ -1410,7 +1415,7 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
               )}
             </div>
 
-            {renderAgentGrid(['Core Systems'], 'Core AI & Orchestration')}
+
           </>
         )}
 
@@ -1635,7 +1640,7 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                   `}</style>
               </div>
 
-              {renderAgentGrid(['Operations', 'Quality Control', 'Labor & HR'], 'Production & Operations AI')}
+
             </>
           )
         }
@@ -1707,7 +1712,7 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                           <div key={i} style={{ width: '4px', height: `${h}%`, background: h > 70 ? '#f43f5e' : '#ec4899', opacity: 0.8 }}></div>
                         ))}
                       </div>
-                      <button className="btn-primary" style={{ background: '#ec4899', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap' }}>Listen for Bearing Wear</button>
+                      <button className="btn-primary" style={{ background: '#ec4899', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap' }} onClick={() => alert("Listening for 4kHz ultrasonic resonance... Result: Bearings on all running looms are stable. No micro-pits detected.")}>Listen for Bearing Wear</button>
                     </div>
                   </div>
                 </div>
@@ -1723,11 +1728,11 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                       <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#10b981' }}>-82%</span>
                     </div>
                   </div>
-                  <button className="btn-primary" style={{ width: '100%', background: '#10b981', color: 'black', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Execute Maintenance Micro-Pulse</button>
+                  <button className="btn-primary" style={{ width: '100%', background: '#10b981', color: 'black', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => alert("Swayam-Siddha Micro-Pulse triggered! Molecular friction heat reduced instantly. Machine life extended.")}>Execute Maintenance Micro-Pulse</button>
                 </div>
               </div>
 
-              {renderAgentGrid(['Predictive Maintenance'], 'Predictive Diagnostics AI')}
+
             </div>
           )
         }
@@ -1982,7 +1987,7 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                 </div>
               </div>
 
-              {renderAgentGrid(['Supply Chain', 'Sustainability'], 'Supply Chain & Sustainability AI')}
+
             </div>
           )
         }
@@ -2074,7 +2079,7 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                     <button className="btn-primary" style={{ width: '100%', background: '#eab308', border: 'none', color: 'black', fontWeight: 'bold', padding: '10px', borderRadius: '8px', cursor: 'pointer' }} onClick={async () => { try { const res = await fetch('http://localhost:3001/owner/trust-score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ score: 'A+', trustIndex: 94, suppliers: 15 }) }); const data = await res.json(); alert(data.message || 'Trust-Score shared successfully.'); } catch (err) { alert('Error: Could not reach the owner server at http://localhost:3001/owner/trust-score. Please ensure the backend is running.'); } }}>Share Trust-Score with Suppliers</button>
                   </div>
                 </div>
-              </div>
+              </div >
 
               <div className="charts-grid" style={{ marginTop: '1.5rem' }}>
                 <div className="stat-card">
@@ -2112,8 +2117,8 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                   </ResponsiveContainer>
                 </div>
               </div>
-              {renderAgentGrid(['Finance'], 'Finance & Sector Analytics AI')}
-            </div>
+
+            </div >
           )
         }
 
@@ -2121,20 +2126,30 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
           activeTab === 'strategy' && (
             <div className="strategy-panel animate-fade-in">
               <div className="stats-grid">
-                <div className="stat-card" style={{ border: '1px solid var(--accent)', background: 'rgba(16, 185, 129, 0.05)' }}>
+                <div className="stat-card" style={{ border: '1px solid var(--accent)', background: 'rgba(16, 185, 129, 0.05)', cursor: 'pointer', transition: 'all 0.3s ease' }} onClick={() => setIsMsmeModalOpen(true)} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(16, 185, 129, 0.2)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
                   <div className="stat-header"><span className="stat-label">MSME Growth Score</span><TrendingUp size={20} color="var(--accent)" /></div>
-                  <div className="stat-value">{typeof digitalMaturity === 'object' ? JSON.stringify(digitalMaturity) : digitalMaturity || 0}/100</div>
+                  <div className="stat-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {typeof digitalMaturity === 'object' ? JSON.stringify(digitalMaturity) : digitalMaturity || 0}/100
+                    <span style={{ fontSize: '0.7rem', padding: '2px 8px', background: 'rgba(16, 185, 129, 0.2)', borderRadius: '12px', color: 'var(--accent)' }}>View Details</span>
+                  </div>
                   <div className="stat-label">Digital Transformation Index</div>
                 </div>
-                <div className="stat-card">
+                <div className="stat-card" style={{ cursor: 'pointer', transition: 'all 0.3s ease' }} onClick={() => setIsClusterModalOpen(true)} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(34, 211, 238, 0.2)'; e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.5)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
                   <div className="stat-header"><span className="stat-label">Cluster Rank</span><Award size={20} color="var(--primary)" /></div>
-                  <div className="stat-value">TOP 15%</div>
+                  <div className="stat-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    TOP 15%
+                    <span style={{ fontSize: '0.7rem', padding: '2px 8px', background: 'rgba(34, 211, 238, 0.1)', borderRadius: '12px', color: '#22d3ee', border: '1px solid rgba(34, 211, 238, 0.3)' }}>View Intelligence</span>
+                  </div>
                   <div className="stat-label">Bhilwara Textile Cluster</div>
                 </div>
-                <div className="stat-card">
+                <div className="stat-card" style={{ cursor: 'pointer', transition: 'all 0.3s ease' }} onClick={() => setIsSubsidyModalOpen(true)} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(59, 130, 246, 0.2)'; e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
                   <div className="stat-header"><span className="stat-label">Subsidy Status</span><Building2 size={20} color="var(--accent)" /></div>
-                  <div className="stat-value">{typeof govSchemes.tufsStatus === 'object' ? JSON.stringify(govSchemes.tufsStatus) : govSchemes.tufsStatus || 'Eligible'}</div>
+                  <div className="stat-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {typeof govSchemes.tufsStatus === 'object' ? JSON.stringify(govSchemes.tufsStatus) : govSchemes.tufsStatus || 'Eligible'}
+                    <span style={{ fontSize: '0.7rem', padding: '2px 8px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '12px', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.3)' }}>View Intel</span>
+                  </div>
                   <div className="stat-label">TUFS / RIPS Potential</div>
+                  <button className="btn-primary" style={{ width: '100%', marginTop: '1rem', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', fontSize: '0.8rem', padding: '0.5rem', border: '1px solid rgba(59, 130, 246, 0.3)', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px' }} onClick={(e) => { e.stopPropagation(); setIsSubsidyModalOpen(true); }}>Check Subsidy Eligibility</button>
                 </div>
               </div>
 
@@ -2143,7 +2158,91 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                   <h3 className="section-title">Eligible MSME Schemes</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {govSchemes.eligibleSchemes && govSchemes.eligibleSchemes.length > 0 ? govSchemes.eligibleSchemes.map((s, i) => (
-                      <div key={i} style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', borderLeft: '3px solid var(--accent)', borderRadius: '8px', fontSize: '0.9rem' }}>
+                      <div key={i} style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', borderLeft: '3px solid var(--accent)', borderRadius: '8px', fontSize: '0.9rem', cursor: 'pointer', transition: '0.2s' }} onClick={() => {
+                        alert(`Generating auto-filled application for: ${s}. Connecting to CA portal... Click OK to download draft!`);
+
+                        const doc = new jsPDF();
+
+                        // Government Header
+                        doc.setFillColor(248, 250, 252);
+                        doc.rect(0, 0, 210, 297, 'F');
+                        doc.setTextColor(30, 58, 138);
+                        doc.setFontSize(18);
+                        doc.setFont("helvetica", "bold");
+                        doc.text('GOVERNMENT OF RAJASTHAN', 105, 20, { align: 'center' });
+                        doc.setFontSize(14);
+                        doc.text(s.toUpperCase(), 105, 30, { align: 'center' });
+                        doc.setFontSize(12);
+                        doc.setTextColor(71, 85, 105);
+                        doc.text('Auto-Generated Application Form', 105, 38, { align: 'center' });
+
+                        doc.setDrawColor(203, 213, 225);
+                        doc.line(14, 45, 196, 45);
+
+                        // Form Content
+                        doc.setTextColor(15, 23, 42);
+                        doc.setFontSize(12);
+                        doc.setFont("helvetica", "bold");
+                        doc.text('ENTERPRISE DETAILS (Data Auto-Extracted)', 14, 55);
+
+                        doc.setFont("helvetica", "normal");
+                        doc.setFontSize(11);
+                        const formY = 65;
+                        const lineSpacing = 10;
+
+                        doc.text('Name of Enterprise:', 14, formY);
+                        doc.setFont("helvetica", "bold"); doc.text('Bhilwara Smart Textiles Pvt. Ltd.', 80, formY); doc.setFont("helvetica", "normal");
+
+                        doc.text('Udyam Registration No:', 14, formY + lineSpacing);
+                        doc.setFont("helvetica", "bold"); doc.text('UDYAM-RJ-08-10245', 80, formY + lineSpacing); doc.setFont("helvetica", "normal");
+
+                        doc.text('Registered Address:', 14, formY + (lineSpacing * 2));
+                        doc.text('Plot 42, RIICO Industrial Area, Bhilwara, Rajasthan 311001', 80, formY + (lineSpacing * 2));
+
+                        doc.text('Category of Enterprise:', 14, formY + (lineSpacing * 3));
+                        doc.text('Medium Enterprise (Textile & Technical Textiles)', 80, formY + (lineSpacing * 3));
+
+                        doc.line(14, formY + (lineSpacing * 4), 196, formY + (lineSpacing * 4));
+
+                        doc.setFont("helvetica", "bold");
+                        doc.text('SUBSIDY CLAIM DETAILS', 14, formY + (lineSpacing * 5));
+                        doc.setFont("helvetica", "normal");
+
+                        autoTable(doc, {
+                          startY: formY + (lineSpacing * 5.5),
+                          head: [['Investment Type', 'Amount Invested', 'Eligible Subsidy (%)', 'Claim Amount']],
+                          body: [
+                            ['Plant & Machinery', 'INR 4.0 Crore', '25%', 'INR 1.0 Crore'],
+                            ['Green Energy System', 'INR 1.0 Crore', '20%', 'INR 20 Lakh']
+                          ],
+                          headStyles: { fillColor: [30, 58, 138] },
+                          alternateRowStyles: { fillColor: [241, 245, 249] },
+                          theme: 'grid'
+                        });
+
+                        let finalY = doc.lastAutoTable.finalY || 150;
+
+                        doc.setFont("helvetica", "bold");
+                        doc.text('DECLARATION', 14, finalY + 15);
+                        doc.setFont("helvetica", "normal");
+                        doc.setFontSize(10);
+
+                        const declarationText = doc.splitTextToSize("I hereby declare that the information provided above is automatically calculated from real-time secure IoT sensors and ERP logs integrated via the SmartFactory Platform. The generated values are verified against manufacturing production records.", 182);
+                        doc.text(declarationText, 14, finalY + 25);
+
+                        // Stamp & Signature Simulation
+                        doc.setDrawColor(16, 185, 129);
+                        doc.setLineWidth(1);
+                        doc.rect(140, finalY + 45, 50, 25);
+                        doc.setTextColor(16, 185, 129);
+                        doc.text('e-Verified by', 145, finalY + 52);
+                        doc.text('SmartFactory AI', 145, finalY + 58);
+                        doc.text('Date: ' + new Date().toLocaleDateString(), 145, finalY + 66);
+
+                        // Download
+                        const safeFileName = s.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                        doc.save(`${safeFileName}_draft_application.pdf`);
+                      }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.2)'} onMouseOut={(e) => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)'}>
                         <strong>{s}</strong>
                       </div>
                     )) : (
@@ -2155,18 +2254,112 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                 <div className="stat-card">
                   <h3 className="section-title">Strategic ROI Insights</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '12px' }}>
+                    <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '12px', cursor: 'pointer', transition: '0.2s' }} onClick={() => {
+                      alert("Simulating Solar Transition... Projected break-even reduced from 2.5 years to 1.8 years using AI load-balancing. Click OK to download ROI Report.");
+
+                      const doc = new jsPDF();
+                      doc.setFillColor(252, 211, 77); // Amber/Yellow
+                      doc.rect(0, 0, 210, 35, 'F');
+                      doc.setTextColor(30, 41, 59);
+                      doc.setFontSize(22);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('SOLAR TRANSITION ROI SIMULATION', 105, 20, { align: 'center' });
+                      doc.setFontSize(12);
+                      doc.setFont("helvetica", "normal");
+                      doc.text('Financial & Energy Impact Projection', 105, 30, { align: 'center' });
+
+                      doc.setTextColor(30, 41, 59);
+                      doc.setFontSize(14);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('1. Existing Metrics', 14, 50);
+                      doc.setFontSize(11);
+                      doc.setFont("helvetica", "normal");
+                      doc.text(`Current Solar Dependence: ${typeof solar.solarPercentage === 'object' ? JSON.stringify(solar.solarPercentage) : solar.solarPercentage || 0}%`, 14, 60);
+                      doc.text('Current Average Monthly Energy Bill: INR 2.3 Lakhs', 14, 68);
+
+                      doc.setFontSize(14);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('2. Proposed Upgrade: 40% Solar Dependence', 14, 85);
+
+                      autoTable(doc, {
+                        startY: 90,
+                        head: [['Financial Metric', 'Current State', 'Projected State']],
+                        body: [
+                          ['Monthly Energy Bill', 'INR 2,30,000', 'INR 1,45,000'],
+                          ['Monthly Savings', '-', 'INR 85,000'],
+                          ['Annual Savings', '-', 'INR 10,20,000'],
+                          ['Initial System Cost', '-', 'INR 18,36,000'],
+                          ['Estimated Break-Even', 'N/A', '1.8 Years']
+                        ],
+                        headStyles: { fillColor: [99, 102, 241] },
+                        theme: 'striped'
+                      });
+
+                      const finalY = doc.lastAutoTable.finalY + 20;
+                      doc.setFontSize(12);
+                      doc.setTextColor(16, 185, 129);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('✓ AI Insights: Smart Machine Load Balancing will reduce the actual break-even time from 2.5 years to 1.8 years.', 14, finalY);
+
+                      doc.save('Solar_Transition_ROI.pdf');
+                    }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}>
                       <p style={{ fontWeight: '700', marginBottom: '5px' }}>Solar Transition ROI</p>
                       <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Current solar at {typeof solar.solarPercentage === 'object' ? JSON.stringify(solar.solarPercentage) : solar.solarPercentage || 0}%. Increasing to 40% will save ₹85,000/month in power costs.</p>
                     </div>
-                    <div style={{ padding: '1rem', background: 'rgba(14, 165, 233, 0.1)', borderRadius: '12px' }}>
+                    <div style={{ padding: '1rem', background: 'rgba(14, 165, 233, 0.1)', borderRadius: '12px', cursor: 'pointer', transition: '0.2s' }} onClick={() => {
+                      alert("Allocating 10 training hours to weavers... Projected Production Efficiency Index (PEI) increase to 89%. Click OK to download Report.");
+
+                      const doc = new jsPDF();
+                      doc.setFillColor(56, 189, 248); // Sky Blue
+                      doc.rect(0, 0, 210, 35, 'F');
+                      doc.setTextColor(15, 23, 42);
+                      doc.setFontSize(22);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('LABOR SKILL IMPACT SIMULATION', 105, 20, { align: 'center' });
+                      doc.setFontSize(12);
+                      doc.setFont("helvetica", "normal");
+                      doc.text('Workforce Intelligence & AI Training Projections', 105, 30, { align: 'center' });
+
+                      doc.setTextColor(30, 41, 59);
+                      doc.setFontSize(14);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('1. Current Workforce Status', 14, 50);
+                      doc.setFontSize(11);
+                      doc.setFont("helvetica", "normal");
+                      doc.text(`Current Workforce Proficiency: ${typeof laborSkill.overallScore === 'object' ? JSON.stringify(laborSkill.overallScore) : laborSkill.overallScore || 0}%`, 14, 60);
+                      doc.text('Current Production Efficiency Index (PEI): 85%', 14, 68);
+
+                      doc.setFontSize(14);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('2. Proposed Intervention', 14, 85);
+
+                      autoTable(doc, {
+                        startY: 90,
+                        head: [['Target Resource', 'Training Allocation', 'Projected Impact']],
+                        body: [
+                          ['Weavers (Grade B)', '10 Hours / Week', '+4% General Machine Speed'],
+                          ['Machine Technicians', '5 Hours / Week', '-12% Machine Downtime'],
+                          ['Floor Supervisors', '2 Hours AI Dashboard', '+8% Quality Control']
+                        ],
+                        headStyles: { fillColor: [14, 165, 233] },
+                        theme: 'grid'
+                      });
+
+                      const finalY = doc.lastAutoTable.finalY + 20;
+                      doc.setFontSize(12);
+                      doc.setTextColor(234, 88, 12);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('✓ Executive Summary: Adding just 10 hours of training raises PEI to 89%, effectively reducing late deliveries by 14%.', 14, finalY, { maxWidth: 180 });
+
+                      doc.save('Labor_Skill_Impact_Report.pdf');
+                    }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}>
                       <p style={{ fontWeight: '700', marginBottom: '5px' }}>Labor Skill Impact</p>
                       <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Workers are {typeof laborSkill.overallScore === 'object' ? JSON.stringify(laborSkill.overallScore) : laborSkill.overallScore || 0}% proficient. 10 hours of extra training will boost PEI by 4%.</p>
                     </div>
                   </div>
                 </div>
               </div>
-              {renderAgentGrid(['Core Systems', 'Finance'], 'Strategic Intelligence AI')}
+
             </div>
           )
         }
@@ -2305,6 +2498,563 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
         }
 
       </main >
+
+      {/* MSME Growth Score Modal */}
+      {
+        isMsmeModalOpen && (
+          <div className="modal-overlay" onClick={() => setIsMsmeModalOpen(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setIsMsmeModalOpen(false)}>✕</button>
+
+              <div className="modal-header">
+                <div className="modal-title">Overall Transformation Index</div>
+                <div className="modal-score-wrap">
+                  <div className="modal-score-glow"></div>
+                  <div className="modal-score">78<span> / 100</span></div>
+                </div>
+              </div>
+
+              <div className="modal-grid">
+                <div className="metric-card" style={{ '--metric-color': '#10b981' }}>
+                  <div className="metric-icon">📈</div>
+                  <div className="metric-content">
+                    <div className="metric-title">Production Efficiency</div>
+                    <div className="metric-value">
+                      82%
+                      <div className="circular-progress" style={{ '--progress': '82%' }}></div>
+                    </div>
+                    <div className="metric-desc">Machines running efficiently with minimal downtime.</div>
+                  </div>
+                </div>
+
+                <div className="metric-card" style={{ '--metric-color': '#f59e0b' }}>
+                  <div className="metric-icon">⚡</div>
+                  <div className="metric-content">
+                    <div className="metric-title">Energy Efficiency</div>
+                    <div className="metric-value">
+                      70%
+                      <div className="circular-progress" style={{ '--progress': '70%' }}></div>
+                    </div>
+                    <div className="metric-desc">High electricity usage detected, optimization recommended.</div>
+                  </div>
+                </div>
+
+                <div className="metric-card" style={{ '--metric-color': '#10b981' }}>
+                  <div className="metric-icon">👷</div>
+                  <div className="metric-content">
+                    <div className="metric-title">Workforce Productivity</div>
+                    <div className="metric-value">
+                      85%
+                      <div className="circular-progress" style={{ '--progress': '85%' }}></div>
+                    </div>
+                    <div className="metric-desc">Worker productivity is above the cluster average.</div>
+                  </div>
+                </div>
+
+                <div className="metric-card" style={{ '--metric-color': '#10b981' }}>
+                  <div className="metric-icon">💰</div>
+                  <div className="metric-content">
+                    <div className="metric-title">Financial Stability</div>
+                    <div className="metric-value">
+                      75%
+                      <div className="circular-progress" style={{ '--progress': '75%' }}></div>
+                    </div>
+                    <div className="metric-desc">Factory shows stable profit growth and positive cash flow.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-recommendations">
+                <div className="rec-title">
+                  <Bot size={20} /> AI Strategic Recommendations
+                </div>
+                <ul className="rec-list">
+                  <li className="rec-item">Install solar hybrid energy system to boost Energy Efficiency score.</li>
+                  <li className="rec-item">Upgrade 2 old weaving machines to reduce unexpected downtime.</li>
+                  <li className="rec-item">Provide worker skill training to further increase productivity yields.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {/* Cluster AI Modal */}
+      {
+        isClusterModalOpen && (
+          <div className="modal-overlay" onClick={() => setIsClusterModalOpen(false)}>
+            <div className="cluster-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setIsClusterModalOpen(false)}>✕</button>
+
+              <div className="modal-header" style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem' }}>
+                <div className="modal-title" style={{ color: '#22d3ee', fontSize: '1.2rem', marginBottom: '0.5rem' }}>Cluster AI – Industrial Benchmark Intelligence</div>
+                <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>AI-powered comparison of factory performance across the entire industrial cluster.</p>
+              </div>
+
+              <div className="cluster-section-title"><Activity size={18} /> Cluster Performance Overview</div>
+              <div className="modal-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '1.5rem' }}>
+                <div className="cluster-metric-card">
+                  <div className="metric-title">Your Factory Performance</div>
+                  <div className="metric-value">82% Efficiency</div>
+                  <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '10px' }}>
+                    <div className="cluster-glow-bar" style={{ width: '82%' }}></div>
+                  </div>
+                </div>
+                <div className="cluster-metric-card">
+                  <div className="metric-title">Cluster Average Performance</div>
+                  <div className="metric-value" style={{ color: '#fbbf24' }}>74% Efficiency</div>
+                  <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '10px' }}>
+                    <div className="cluster-glow-bar" style={{ width: '74%', background: '#fbbf24', boxShadow: '0 0 10px #fbbf24' }}></div>
+                  </div>
+                </div>
+                <div className="cluster-metric-card">
+                  <div className="metric-title">Top Factory Performance</div>
+                  <div className="metric-value" style={{ color: '#8b5cf6' }}>91% Efficiency</div>
+                  <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '10px' }}>
+                    <div className="cluster-glow-bar" style={{ width: '91%', background: '#8b5cf6', boxShadow: '0 0 10px #8b5cf6' }}></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-grid" style={{ marginBottom: '1.5rem' }}>
+                <div className="cluster-metric-card">
+                  <div className="cluster-section-title" style={{ border: 'none', padding: 0 }}><Factory size={18} /> Production Benchmark</div>
+                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Your Production:</span> <span style={{ fontWeight: 'bold' }}>12,500 units/day</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Cluster Average:</span> <span style={{ fontWeight: 'bold', color: '#fbbf24' }}>10,800 units/day</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Top Factory:</span> <span style={{ fontWeight: 'bold', color: '#8b5cf6' }}>15,200 units/day</span></div>
+                  </div>
+                </div>
+
+                <div className="cluster-metric-card">
+                  <div className="cluster-section-title" style={{ border: 'none', padding: 0 }}><Zap size={18} /> Energy Intelligence</div>
+                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Your Cost:</span> <span style={{ fontWeight: 'bold', color: '#ef4444' }}>₹2.3L / month</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Cluster Average:</span> <span style={{ fontWeight: 'bold' }}>₹2.0L / month</span></div>
+                  </div>
+                  <div className="cluster-insight" style={{ borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#fca5a5' }}>
+                    Your factory energy cost is slightly higher than the cluster average. AI recommends energy optimization.
+                  </div>
+                </div>
+
+                <div className="cluster-metric-card">
+                  <div className="cluster-section-title" style={{ border: 'none', padding: 0 }}><Users size={18} /> Workforce Productivity</div>
+                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Your Productivity:</span> <span style={{ fontWeight: 'bold', color: '#10b981' }}>85%</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Cluster Average:</span> <span style={{ fontWeight: 'bold' }}>78%</span></div>
+                  </div>
+                  <div className="cluster-insight">
+                    Your workforce productivity is above the cluster average.
+                  </div>
+                </div>
+
+                <div className="cluster-metric-card">
+                  <div className="cluster-section-title" style={{ border: 'none', padding: 0 }}><TrendingUp size={18} /> Demand Prediction</div>
+                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Next Month Trend:</span> <span style={{ fontWeight: 'bold', color: '#10b981' }}>HIGH</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}><span style={{ color: '#94a3b8' }}>Market Price Exp:</span> <span style={{ fontWeight: 'bold', color: '#10b981' }}>+6% Increase</span></div>
+                  </div>
+                  <div className="cluster-insight" style={{ borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#93c5fd' }}>
+                    Demand for textile products is expected to increase across the cluster.
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-grid">
+                <div className="cluster-metric-card" style={{ gridColumn: '1 / -1' }}>
+                  <div className="cluster-section-title"><Award size={18} /> Top Performing Factories</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '15px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+                      <div style={{ width: '30px', height: '30px', background: '#fbbf24', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', color: 'black' }}>1</div>
+                      <div style={{ flex: 1, fontWeight: 'bold' }}>Shree Textiles</div>
+                      <div style={{ color: '#fbbf24', fontWeight: 'bold' }}>Growth Score: 91</div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+                      <div style={{ width: '30px', height: '30px', background: '#94a3b8', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', color: 'black' }}>2</div>
+                      <div style={{ flex: 1, fontWeight: 'bold' }}>Surya Fabrics</div>
+                      <div style={{ color: '#94a3b8', fontWeight: 'bold' }}>Growth Score: 88</div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '10px', background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', borderRadius: '8px' }}>
+                      <div style={{ width: '30px', height: '30px', background: '#10b981', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', color: 'black' }}>3</div>
+                      <div style={{ flex: 1, fontWeight: 'bold', color: '#10b981' }}>Your Factory</div>
+                      <div style={{ color: '#10b981', fontWeight: 'bold' }}>Growth Score: 82</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-recommendations" style={{ background: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.2)' }}>
+                <div className="rec-title" style={{ color: '#10b981' }}>
+                  <Bot size={20} /> Cluster AI Recommendations
+                </div>
+                <ul className="rec-list">
+                  <li className="rec-item" style={{ color: '#e2e8f0' }}>Upgrade to Air Jet Loom technology for higher production efficiency.</li>
+                  <li className="rec-item" style={{ color: '#e2e8f0' }}>Install solar hybrid energy system to reduce electricity costs.</li>
+                  <li className="rec-item" style={{ color: '#e2e8f0' }}>Increase production capacity by 12% to match cluster leaders.</li>
+                </ul>
+              </div>
+
+              <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                <button
+                  className="btn-cyan-gradient"
+                  style={{ padding: '12px 30px', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer' }}
+                  onClick={() => {
+                    alert("Connecting to Cluster Nodes... Generating Your Custom PDF Report! Click OK to download.");
+
+                    const doc = new jsPDF();
+
+                    // Report Header
+                    doc.setFillColor(15, 23, 42); // Dark slate bg
+                    doc.rect(0, 0, 210, 40, 'F');
+                    doc.setTextColor(34, 211, 238); // Cyan title
+                    doc.setFontSize(22);
+                    doc.text('BHILWARA CLUSTER AI REPORT', 105, 20, { align: 'center' });
+                    doc.setTextColor(148, 163, 184); // Subtitle
+                    doc.setFontSize(12);
+                    doc.text('Industrial Benchmark Intelligence - Confidential', 105, 30, { align: 'center' });
+
+                    // Main Body
+                    doc.setTextColor(30, 41, 59);
+                    doc.setFontSize(14);
+                    doc.text('1. Performance Overview', 14, 50);
+
+                    autoTable(doc, {
+                      startY: 55,
+                      head: [['Metric', 'Your Factory', 'Cluster Average', 'Cluster Leader']],
+                      body: [
+                        ['Production Efficiency', '82%', '74%', '91%'],
+                        ['Workforce Productivity', '85%', '78%', '88%'],
+                        ['Energy Cost (per month)', 'INR 2.3L', 'INR 2.0L', 'INR 1.8L']
+                      ],
+                      headStyles: { fillColor: [16, 185, 129] },
+                      alternateRowStyles: { fillColor: [241, 245, 249] },
+                      theme: 'grid'
+                    });
+
+                    let finalY = doc.lastAutoTable.finalY || 55;
+
+                    doc.setFontSize(14);
+                    doc.text('2. Top Performing Factories (Leaderboard)', 14, finalY + 15);
+
+                    autoTable(doc, {
+                      startY: finalY + 20,
+                      head: [['Rank', 'Factory Name', 'Growth Score']],
+                      body: [
+                        ['1', 'Shree Textiles', '91'],
+                        ['2', 'Surya Fabrics', '88'],
+                        ['3', 'Your Factory', '82']
+                      ],
+                      headStyles: { fillColor: [59, 130, 246] },
+                      theme: 'striped'
+                    });
+
+                    finalY = doc.lastAutoTable.finalY || finalY + 20;
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(30, 41, 59);
+                    doc.text('3. AI Strategic Recommendations', 14, finalY + 15);
+
+                    doc.setFontSize(11);
+                    doc.setTextColor(71, 85, 105);
+                    const splitText = doc.splitTextToSize(
+                      "• Upgrade to Air Jet Loom technology for higher production efficiency.\n\n" +
+                      "• Install a solar hybrid energy system to reduce your high electricity costs down to cluster average.\n\n" +
+                      "• Increase production capacity by 12% to effectively match cluster leaders and capitalize on the +6% expected demand trend.",
+                      180
+                    );
+                    doc.text(splitText, 14, finalY + 25);
+
+                    // Footer
+                    doc.setFontSize(10);
+                    doc.setTextColor(148, 163, 184);
+                    doc.text('Generated by SmartFactory AI System', 105, 280, { align: 'center' });
+
+                    doc.save('Bhilwara_Cluster_Report.pdf');
+                  }}
+                >
+                  View Full Cluster Intelligence Report
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {/* Government Subsidy AI Modal */}
+      {
+        isSubsidyModalOpen && (
+          <div className="modal-overlay" onClick={() => setIsSubsidyModalOpen(false)}>
+            <div className="subsidy-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setIsSubsidyModalOpen(false)}>✕</button>
+
+              <div className="modal-header" style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                <div className="modal-title" style={{ color: '#60a5fa', fontSize: '1.2rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                  <Landmark size={24} /> Government Subsidy Intelligence
+                </div>
+                <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>AI-powered system that identifies government subsidies available for the factory.</p>
+              </div>
+
+              <div className="cluster-section-title" style={{ color: '#60a5fa', borderBottomColor: 'rgba(96, 165, 250, 0.2)' }}><Briefcase size={18} /> Eligible Government Schemes</div>
+              <div className="modal-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '1.5rem' }}>
+                <div className="subsidy-card subsidy-card-glow">
+                  <div className="metric-title" style={{ color: '#f8fafc' }}>RIPS 2022</div>
+                  <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '10px' }}>Rajasthan Investment Promotion Scheme</div>
+                  <div className="metric-value" style={{ color: '#10b981', fontSize: '1.2rem' }}>₹1.2 Crore Capital Subsidy</div>
+                  <div style={{ marginTop: '10px' }}><span className="status-badge badge-eligible">Eligible</span></div>
+                </div>
+                <div className="subsidy-card subsidy-card-glow">
+                  <div className="metric-title" style={{ color: '#f8fafc' }}>TUFS</div>
+                  <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '10px' }}>Technology Upgradation Fund Scheme</div>
+                  <div className="metric-value" style={{ color: '#3b82f6', fontSize: '1.2rem' }}>25% Machinery Subsidy</div>
+                  <div style={{ marginTop: '10px' }}><span className="status-badge badge-review">In Review</span></div>
+                </div>
+                <div className="subsidy-card subsidy-card-glow">
+                  <div className="metric-title" style={{ color: '#f8fafc' }}>Solar Energy Subsidy</div>
+                  <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '10px' }}>State Renewable Energy Board</div>
+                  <div className="metric-value" style={{ color: '#fbbf24', fontSize: '1.2rem' }}>₹85,000 Monthly Savings</div>
+                  <div style={{ marginTop: '10px' }}><span className="status-badge badge-approved">Approved</span></div>
+                </div>
+              </div>
+
+              <div className="modal-grid" style={{ marginBottom: '1.5rem', gridTemplateColumns: '1fr 1fr' }}>
+                <div className="subsidy-card">
+                  <div className="cluster-section-title" style={{ color: '#60a5fa', borderBottom: 'none', padding: 0 }}><Activity size={18} /> Application Status</div>
+                  <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                        <span style={{ fontWeight: 'bold' }}>RIPS 2022</span>
+                        <span className="status-badge badge-not-applied">Not Applied</span>
+                      </div>
+                      <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px' }}>
+                        <div style={{ width: '0%', height: '100%', background: '#94a3b8', borderRadius: '3px' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                        <span style={{ fontWeight: 'bold' }}>TUFS Scheme</span>
+                        <span className="status-badge badge-review">In Review</span>
+                      </div>
+                      <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px' }}>
+                        <div style={{ width: '65%', height: '100%', background: '#f59e0b', borderRadius: '3px', boxShadow: '0 0 8px #f59e0b' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                        <span style={{ fontWeight: 'bold' }}>Solar Subsidy</span>
+                        <span className="status-badge badge-approved">Approved</span>
+                      </div>
+                      <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px' }}>
+                        <div style={{ width: '100%', height: '100%', background: '#3b82f6', borderRadius: '3px', boxShadow: '0 0 8px #3b82f6' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="subsidy-card">
+                  <div className="cluster-section-title" style={{ color: '#60a5fa', borderBottom: 'none', padding: 0 }}><DollarSign size={18} /> Estimated Financial Benefit</div>
+                  <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '10px' }}>
+                      <span style={{ color: '#94a3b8' }}>Capital Subsidy:</span>
+                      <span style={{ fontWeight: 'bold', color: '#10b981', fontSize: '1.1rem' }}>₹1.2 Crore</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '10px' }}>
+                      <span style={{ color: '#94a3b8' }}>Machinery Subsidy:</span>
+                      <span style={{ fontWeight: 'bold', color: '#10b981', fontSize: '1.1rem' }}>₹45 Lakh</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: '#94a3b8' }}>Energy Savings:</span>
+                      <span style={{ fontWeight: 'bold', color: '#10b981', fontSize: '1.1rem' }}>₹10 Lakh / year</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-grid" style={{ marginBottom: '1.5rem', gridTemplateColumns: '1.5fr 1fr' }}>
+                <div className="subsidy-card" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05))', borderColor: 'rgba(59, 130, 246, 0.3)' }}>
+                  <div className="cluster-section-title" style={{ color: '#60a5fa', borderBottom: 'none', padding: 0 }}><Sparkles size={18} /> AI Auto-Fill Application</div>
+                  <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: '1.5', margin: '1rem 0' }}>
+                    The system automatically collects factory data including energy usage, worker count, and machinery details to generate government-ready application forms.
+                  </p>
+                  <button
+                    className="btn-cyan-gradient"
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', fontSize: '1rem', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                    onClick={() => {
+                      alert("GenAI extracting factory data... Fetching Udyam Registration... Applying Machine Specs... Click OK to download draft!");
+
+                      const doc = new jsPDF();
+
+                      // Government Header
+                      doc.setFillColor(248, 250, 252);
+                      doc.rect(0, 0, 210, 297, 'F');
+                      doc.setTextColor(30, 58, 138);
+                      doc.setFontSize(18);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('GOVERNMENT OF RAJASTHAN', 105, 20, { align: 'center' });
+                      doc.setFontSize(14);
+                      doc.text('RAJASTHAN INVESTMENT PROMOTION SCHEME (RIPS-2022)', 105, 30, { align: 'center' });
+                      doc.setFontSize(12);
+                      doc.setTextColor(71, 85, 105);
+                      doc.text('Auto-Generated Application Form - Form A', 105, 38, { align: 'center' });
+
+                      doc.setDrawColor(203, 213, 225);
+                      doc.line(14, 45, 196, 45);
+
+                      // Form Content
+                      doc.setTextColor(15, 23, 42);
+                      doc.setFontSize(12);
+                      doc.setFont("helvetica", "bold");
+                      doc.text('ENTERPRISE DETAILS (Data Auto-Extracted)', 14, 55);
+
+                      doc.setFont("helvetica", "normal");
+                      doc.setFontSize(11);
+                      const formY = 65;
+                      const lineSpacing = 10;
+
+                      doc.text('Name of Enterprise:', 14, formY);
+                      doc.setFont("helvetica", "bold"); doc.text('Bhilwara Smart Textiles Pvt. Ltd.', 80, formY); doc.setFont("helvetica", "normal");
+
+                      doc.text('Udyam Registration No:', 14, formY + lineSpacing);
+                      doc.setFont("helvetica", "bold"); doc.text('UDYAM-RJ-08-10245', 80, formY + lineSpacing); doc.setFont("helvetica", "normal");
+
+                      doc.text('Registered Address:', 14, formY + (lineSpacing * 2));
+                      doc.text('Plot 42, RIICO Industrial Area, Bhilwara, Rajasthan 311001', 80, formY + (lineSpacing * 2));
+
+                      doc.text('Category of Enterprise:', 14, formY + (lineSpacing * 3));
+                      doc.text('Medium Enterprise (Textile & Technical Textiles)', 80, formY + (lineSpacing * 3));
+
+                      doc.line(14, formY + (lineSpacing * 4), 196, formY + (lineSpacing * 4));
+
+                      doc.setFont("helvetica", "bold");
+                      doc.text('SUBSIDY CLAIM DETAILS', 14, formY + (lineSpacing * 5));
+                      doc.setFont("helvetica", "normal");
+
+                      autoTable(doc, {
+                        startY: formY + (lineSpacing * 5.5),
+                        head: [['Investment Type', 'Amount Invested', 'Eligible Subsidy (%)', 'Claim Amount']],
+                        body: [
+                          ['Plant & Machinery (Air Jet Looms)', 'INR 4.0 Crore', '25%', 'INR 1.0 Crore'],
+                          ['Green Energy (Solar Hybrid System)', 'INR 1.0 Crore', '20%', 'INR 20 Lakh'],
+                          ['Total Capital Subsidy Claim', '-', '-', 'INR 1.2 Crore']
+                        ],
+                        headStyles: { fillColor: [30, 58, 138] },
+                        alternateRowStyles: { fillColor: [241, 245, 249] },
+                        theme: 'grid'
+                      });
+
+                      let finalY = doc.lastAutoTable.finalY || 150;
+
+                      doc.setFont("helvetica", "bold");
+                      doc.text('DECLARATION', 14, finalY + 15);
+                      doc.setFont("helvetica", "normal");
+                      doc.setFontSize(10);
+
+                      const declarationText = doc.splitTextToSize("I hereby declare that the information provided above is automatically calculated from real-time secure IoT sensors and ERP logs integrated via the SmartFactory Platform. The generated values are verified against manufacturing production records.", 182);
+                      doc.text(declarationText, 14, finalY + 25);
+
+                      // Stamp & Signature Simulation
+                      doc.setDrawColor(16, 185, 129);
+                      doc.setLineWidth(1);
+                      doc.rect(140, finalY + 45, 50, 25);
+                      doc.setTextColor(16, 185, 129);
+                      doc.text('e-Verified by', 145, finalY + 52);
+                      doc.text('SmartFactory AI', 145, finalY + 58);
+                      doc.text('Date: ' + new Date().toLocaleDateString(), 145, finalY + 66);
+
+                      // Download
+                      doc.save('RIPS-2022-Application-Draft.pdf');
+                    }}
+                  >
+                    <FileScan size={18} /> Generate Auto-Filled Subsidy Application
+                  </button>
+                </div>
+
+                <div className="subsidy-card">
+                  <div className="cluster-section-title" style={{ color: '#60a5fa', borderBottom: 'none', padding: 0 }}><Activity size={18} /> Subsidy Deadline Tracker</div>
+                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <div style={{ background: 'rgba(245, 158, 11, 0.1)', padding: '10px', borderRadius: '8px', borderLeft: '3px solid #f59e0b' }}>
+                      <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>TUFS Application Deadline:</div>
+                      <div style={{ fontWeight: 'bold', color: '#f59e0b', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '5px' }}>12 April <span style={{ fontSize: '0.75rem', background: '#f59e0b', color: 'black', padding: '2px 6px', borderRadius: '10px' }}>Urgent</span></div>
+                    </div>
+                    <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '10px', borderRadius: '8px', borderLeft: '3px solid #10b981' }}>
+                      <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Solar Subsidy Window:</div>
+                      <div style={{ fontWeight: 'bold', color: '#10b981', fontSize: '1.1rem' }}>25 days remaining</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                <button
+                  style={{ background: 'transparent', border: '1px solid #3b82f6', color: '#3b82f6', padding: '10px 25px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                  onClick={() => {
+                    alert("Compiling Subsidy Eligibility Data... Click OK to download your report.");
+
+                    const doc = new jsPDF();
+
+                    doc.setFillColor(15, 23, 42);
+                    doc.rect(0, 0, 210, 40, 'F');
+                    doc.setTextColor(34, 211, 238);
+                    doc.setFontSize(22);
+                    doc.setFont("helvetica", "bold");
+                    doc.text('SUBSIDY ELIGIBILITY REPORT', 105, 20, { align: 'center' });
+                    doc.setTextColor(148, 163, 184);
+                    doc.setFontSize(12);
+                    doc.setFont("helvetica", "normal");
+                    doc.text('SmartFactory Financial Intelligence', 105, 30, { align: 'center' });
+
+                    doc.setTextColor(30, 41, 59);
+                    doc.setFontSize(14);
+                    doc.setFont("helvetica", "bold");
+                    doc.text('1. Identified Government Schemes', 14, 50);
+
+                    doc.setFont("helvetica", "normal");
+                    autoTable(doc, {
+                      startY: 55,
+                      head: [['Scheme Name', 'Benefit Type', 'Estimated Value', 'Status']],
+                      body: [
+                        ['RIPS 2022 (Rajasthan)', 'Capital Subsidy', 'INR 1.2 Crore', 'Eligible'],
+                        ['TUFS (Textiles)', 'Machinery Subsidy', '25% (Est. 45L)', 'In Review'],
+                        ['Solar Energy Board', 'Energy Savings', 'INR 10L / year', 'Approved']
+                      ],
+                      headStyles: { fillColor: [59, 130, 246] },
+                      alternateRowStyles: { fillColor: [241, 245, 249] },
+                      theme: 'grid'
+                    });
+
+                    let finalY = doc.lastAutoTable.finalY || 55;
+
+                    doc.setFontSize(14);
+                    doc.setFont("helvetica", "bold");
+                    doc.text('2. Action Items & Next Steps', 14, finalY + 15);
+
+                    doc.setFontSize(11);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(71, 85, 105);
+                    const actionsText = doc.splitTextToSize(
+                      "• The RIPS 2022 application requires immediate submission. All prerequisite data has been collected by the SmartFactory platform.\n\n" +
+                      "• TUFS Scheme is under review. The designated nodal officer will process the machine specs within 14 working days.\n\n" +
+                      "• The Solar Subsidy is approved and installation should be scheduled before the 25-day deadline expires.",
+                      180
+                    );
+                    doc.text(actionsText, 14, finalY + 25);
+
+                    // Footer
+                    doc.setFontSize(10);
+                    doc.setTextColor(148, 163, 184);
+                    doc.text('Confidential - Generated by SmartFactory AI', 105, 280, { align: 'center' });
+
+                    doc.save('Subsidy_Eligibility_Report.pdf');
+                  }}
+                >
+                  Download Subsidy Report
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div >
   );
 }
