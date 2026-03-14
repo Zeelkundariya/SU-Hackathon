@@ -806,7 +806,7 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
               </div>
             </div>
 
-            <div className="stats-grid">
+            <div className="stats-grid top-green-row" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", background: "#059669", padding: "1.5rem", borderRadius: "24px", marginBottom:"1.5rem", boxShadow: "0 15px 35px -5px rgba(5,150,105,0.4)" }}>
               <div className="stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, right: 0, padding: '10px' }}>
                   <div className="pulse" style={{ width: '8px', height: '8px', background: pei > 80 ? 'var(--accent)' : 'var(--danger)', borderRadius: '50%' }}></div>

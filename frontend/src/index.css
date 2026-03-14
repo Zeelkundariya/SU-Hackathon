@@ -3,35 +3,24 @@
 @tailwind utilities;
 
 :root {
-  /* Modern SaaS Light Theme Dashboard Colors */
-  --primary: #10b981;
-  /* Teal Green */
-  --primary-hover: #059669;
-  /* Emerald Green */
-
-  --bg-dark: #f8fafc;
-  /* Light Gray Background */
-  --bg-card: #ffffff;
-  /* Clean White Card Background */
-  --text-main: #111827;
-  /* Dark Gray Text */
-  --text-muted: #6b7280;
-  /* Gray Secondary Text */
-
-  --accent: #f59e0b;
-  /* Soft Orange Highlight */
-  --danger: #ef4444;
-
-  --border: #e2e8f0;
-  /* Soft Light Gray Border */
-  --glass: rgba(255, 255, 255, 0.95);
-  --glass-border: rgba(226, 232, 240, 0.5);
-
-  --glow-primary: rgba(16, 185, 129, 0.2);
-  --glow-accent: rgba(245, 158, 11, 0.2);
-
-  --card-gradient: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-  --soft-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  /* Lessa Exact Match Palette */
+  --primary: #059669; /* Deep Emerald/Teal Green used in main cards */
+  --primary-hover: #047857; 
+  
+  --bg-dark: #f0f4f4; /* Very light cool-gray background of the app */
+  --bg-card: #ffffff; /* White cards */
+  --text-main: #111827; /* Dark Gray Text */
+  --text-muted: #828c94; /* Soft Gray for labels */
+  
+  --accent: #f97316; /* Orange button accent */
+  --danger: #ef4444; 
+  
+  --border: #e2e8f0; 
+  --glass: #ffffff;
+  --glass-border: transparent;
+  
+  --card-gradient: #ffffff;
+  --soft-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); /* Specifically soft large shadow */
 
   /* System Gray Scale */
   --slate-50: #f8fafc;
@@ -71,9 +60,8 @@
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--primary);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px -10px rgba(0,0,0,0.12);
 }
 
 * {
@@ -114,17 +102,16 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 280px;
-  background: var(--bg-card);
-  border-right: 1px solid var(--border);
-  height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
+  width: 250px;
+  background-color: #ffffff;
+  padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 1rem;
-  z-index: 100;
+  border-right: none;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  z-index: 10;
+  box-shadow: 5px 0 20px rgba(0,0,0,0.02);
 }
 
 .logo {
@@ -201,16 +188,14 @@ body {
 
 .stat-card {
   background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-  padding: 1.75rem;
-  border-radius: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 1.5rem;
+  border: none;
+  box-shadow: var(--soft-shadow);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 160px;
+  position: relative;
+  overflow: hidden;
 }
 
 .stat-card:hover {
@@ -1310,3 +1295,11 @@ body {
   color: #94a3b8;
   border: 1px solid rgba(148, 163, 184, 0.3);
 }
+
+/* Lessa Exact Match Override Classes */
+.dashboard-header-override { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.dashboard-title-override { font-size: 1.8rem; font-weight: 800; color: #111827; margin: 0; display:flex; align-items:center; gap:8px; }
+.top-green-row .stat-card { background: #059669; color: white !important; }
+.top-green-row .stat-card * { color: white !important; }
+.top-green-row .stat-card .stat-label { opacity: 0.8 !important; }
+.top-green-row .stat-card svg { stroke: white !important; fill: transparent; }
