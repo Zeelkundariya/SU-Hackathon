@@ -17,11 +17,7 @@
         "recharts": "^2.5.0"
     },
     "scripts": {
-<<<<<<< HEAD
         "start": "set BROWSER=none && set PORT=3001 && react-scripts start",
-=======
-        "start": "set BROWSER=none&& set PORT=3000&& react-scripts start",
->>>>>>> 0fa9bdf (Update Dashboard with Subsidy Intelligence, ROI Insights, and AI Simulation buttons with PDF generation)
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
