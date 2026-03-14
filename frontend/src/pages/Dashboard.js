@@ -1410,45 +1410,6 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                 </div>
               </div>
 
-              {/* NEW INTERACTIVE FEATURE: Machine Health Slider */}
-              <div className="stat-card" style={{ borderLeft: `4px solid ${machineVibration > 85 ? 'var(--danger)' : machineVibration > 65 ? 'var(--warning)' : 'var(--accent)'}`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div className="stat-header">
-                  <div className="stat-icon" style={{ color: machineVibration > 85 ? 'var(--danger)' : machineVibration > 65 ? 'var(--warning)' : 'var(--accent)' }}><Activity size={20} /></div>
-                  <span className="badge" style={{ background: machineVibration > 85 ? 'rgba(239, 68, 68, 0.1)' : machineVibration > 65 ? 'rgba(132, 177, 121, 0.1)' : 'rgba(162, 203, 139, 0.1)', color: machineVibration > 85 ? 'var(--danger)' : machineVibration > 65 ? 'var(--warning)' : 'var(--accent)' }}>
-                    {machineVibration > 85 ? 'CRITICAL' : machineVibration > 65 ? 'WARNING' : 'HEALTHY'}
-                  </span>
-                </div>
-                <div className="stat-value" style={{ color: machineVibration > 85 ? 'var(--danger)' : '#f1f5f9' }}>{typeof machineVibration === 'object' ? JSON.stringify(machineVibration) : machineVibration} Hz</div>
-                <div className="stat-label">Loom Vibration Frequency (Live Drag)</div>
-                <input
-                  type="range"
-                  min="20"
-                  max="120"
-                  value={typeof machineVibration === 'object' ? JSON.stringify(machineVibration) : machineVibration}
-                  onChange={(e) => {
-                    const val = parseInt(e.target.value);
-                    setMachineVibration(val);
-                    if (val > 85 && machineHealthState === 0) {
-                      setMachineHealthState(1);
-                      triggerOwnerRequest('MaintenanceAI', 'Emergency Repair', `CRITICAL: Loom Vibration spiked to ${val}Hz. Dispatched technician requested.`).then(req => {
-                        if (req?._id) setActiveRequestIds(p => ({ ...p, machineHealth: req._id }));
-                      });
-                    }
-                  }}
-                  style={{ width: '100%', marginTop: '1rem', accentColor: machineVibration > 85 ? 'var(--danger)' : machineVibration > 65 ? 'var(--warning)' : 'var(--accent)', cursor: 'ew-resize' }}
-                />
-                {machineHealthState === 1 && (
-                  <div style={{ marginTop: '10px', textAlign: 'center', padding: '6px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '6px', color: '#1E1E1E', fontWeight: 'bold', fontSize: '0.7rem', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                    <div className="pulse" style={{ width: '8px', height: '8px', background: '#84B179', borderRadius: '50%' }}></div>
-                    Emergency Request Sent to Owner
-                  </div>
-                )}
-                {machineHealthState === 2 && (
-                  <div style={{ marginTop: '10px', textAlign: 'center', padding: '6px', background: 'rgba(162, 203, 139, 0.2)', borderRadius: '6px', color: '#A2CB8B', fontWeight: 'bold', fontSize: '0.7rem' }}>
-                    Technician Dispatched ✅
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* NEW: Simulation Control Hub (Interactive Demo) */}
@@ -2271,6 +2232,40 @@ import { agentsData } from "../data/agentsData"; export default function Dashboa
                       <div style={{ fontSize: '0.9rem', fontWeight: 'bold', margin: '4px 0' }}>Bulk Asset Overhaul</div>
                       <p style={{ fontSize: '0.75rem', opacity: 0.8, margin: 0 }}>Syncing maintenance shift to low-load windows improves net profit by 8.4%.</p>
                     </div>
+
+                    {/* LIVE INTERACTIVE SLIDER - CONSOLIDATED FROM OPERATIONS */}
+                    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1.2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Zap size={14} color={machineVibration > 85 ? '#ef4444' : '#2E8B57'} />
+                          <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', opacity: 0.7, fontWeight: '900' }}>Live Machine Stress</span>
+                        </div>
+                        <span style={{ fontSize: '0.7rem', fontWeight: '900', color: machineVibration > 85 ? '#ef4444' : '#2E8B57' }}>{machineVibration > 85 ? 'CRITICAL' : 'STABLE'}</span>
+                      </div>
+                      <input
+                        type="range" min="20" max="120"
+                        value={machineVibration}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          setMachineVibration(val);
+                          if (val > 85 && machineHealthState === 0) {
+                            setMachineHealthState(1);
+                            triggerOwnerRequest('MaintenanceAI', 'Emergency Repair', `CRITICAL: Loom Vibration spiked to ${val}Hz.`).then(req => {
+                              if (req?._id) setActiveRequestIds(p => ({ ...p, machineHealth: req._id }));
+                            });
+                          }
+                        }}
+                        style={{ width: '100%', accentColor: machineVibration > 85 ? '#ef4444' : '#2E8B57', cursor: 'ew-resize' }}
+                      />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
+                        <span style={{ fontSize: '0.65rem', opacity: 0.5 }}>20Hz</span>
+                        <span style={{ fontSize: '0.85rem', fontWeight: '900', color: '#fff' }}>{machineVibration} Hz</span>
+                        <span style={{ fontSize: '0.65rem', opacity: 0.5 }}>120Hz</span>
+                      </div>
+                      {machineHealthState === 1 && <div style={{ fontSize: '0.65rem', color: '#ef4444', fontWeight: 'bold', marginTop: '5px', textAlign: 'center' }}>⚠️ Emergency Request Pending...</div>}
+                      {machineHealthState === 2 && <div style={{ fontSize: '0.65rem', color: '#2E8B57', fontWeight: 'bold', marginTop: '5px', textAlign: 'center' }}>✅ Technician Dispatched</div>}
+                    </div>
+
                     <button
                       className="btn-primary"
                       style={{ background: '#2E8B57', color: '#fff', border: 'none', padding: '14px', borderRadius: '12px', fontWeight: 'bold', transition: '0.3s' }}
