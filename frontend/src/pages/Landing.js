@@ -53,7 +53,7 @@ const Landing = () => {
     ];
 
     return (
-        <div className="landing-root" style={{ background: '#05070a', color: 'white', fontFamily: 'Inter, sans-serif' }}>
+        <div className="landing-root" style={{ background: '#F7F9F9', color: '#1E1E1E', fontFamily: 'Inter, sans-serif' }}>
             {/* Navbar */}
             <nav style={{
                 position: 'fixed',
@@ -67,14 +67,14 @@ const Landing = () => {
                 alignItems: 'center',
                 zIndex: 1000,
                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none'
+                borderBottom: scrolled ? '1px solid rgba(27, 42, 65,0.05)' : 'none'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                     <div style={{
-                        background: 'linear-gradient(45deg, #6366f1, #a855f7)',
+                        background: 'linear-gradient(45deg, #1B2A41, #2E8B57)',
                         padding: '8px',
                         borderRadius: '12px',
-                        boxShadow: '0 0 20px rgba(99, 102, 241, 0.3)'
+                        boxShadow: '0 0 20px rgba(27, 42, 65, 0.3)'
                     }}>
                         <Factory size={24} color="white" />
                     </div>
@@ -85,17 +85,17 @@ const Landing = () => {
                     <button
                         onClick={() => navigate('/dashboard')}
                         style={{
-                            background: 'rgba(255,255,255,0.03)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            color: 'white',
+                            background: 'rgba(27, 42, 65,0.03)',
+                            border: '1px solid rgba(27, 42, 65,0.1)',
+                            color: '#1E1E1E',
                             padding: '10px 24px',
                             borderRadius: '12px',
                             fontWeight: '700',
                             cursor: 'pointer',
                             transition: '0.3s'
                         }}
-                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
-                        onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(27, 42, 65,0.08)'}
+                        onMouseOut={(e) => e.currentTarget.style.background = 'rgba(27, 42, 65,0.03)'}
                     >
                         Launch Command Center
                     </button>
@@ -112,7 +112,8 @@ const Landing = () => {
                 textAlign: 'center',
                 padding: '0 5%',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                background: 'linear-gradient(180deg, rgba(27, 42, 65, 0.1) 0%, transparent 100%)'
             }}>
                 <div style={{
                     position: 'absolute',
@@ -121,7 +122,7 @@ const Landing = () => {
                     transform: 'translateX(-50%)',
                     width: '600px',
                     height: '600px',
-                    background: 'rgba(99, 102, 241, 0.15)',
+                    background: 'rgba(27, 42, 65, 0.15)',
                     filter: 'blur(150px)',
                     borderRadius: '50%',
                     zIndex: 0
@@ -131,10 +132,10 @@ const Landing = () => {
                     <span style={{
                         display: 'inline-block',
                         padding: '6px 16px',
-                        background: 'rgba(99, 102, 241, 0.1)',
-                        border: '1px solid rgba(99, 102, 241, 0.3)',
+                        background: 'rgba(27, 42, 65, 0.1)',
+                        border: '1px solid rgba(27, 42, 65, 0.3)',
                         borderRadius: '100px',
-                        color: '#818cf8',
+                        color: '#1E1E1E',
                         fontSize: '0.85rem',
                         fontWeight: '700',
                         marginBottom: '2rem',
@@ -151,17 +152,17 @@ const Landing = () => {
                         lineHeight: 1.1,
                         letterSpacing: '-2px',
                         marginBottom: '1.5rem',
-                        background: 'linear-gradient(to bottom right, #fff 30%, rgba(255,255,255,0.5))',
+                        background: 'linear-gradient(to bottom right, #1B2A41 30%, #2E8B57)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent'
                     }}>
                         Powering the Bhilwara <br />
-                        <span style={{ color: '#6366f1' }}>Nirvana Tier</span> Factory
+                        <span style={{ color: '#1E1E1E' }}>Textile Ecosystem</span>
                     </h1>
 
                     <p style={{
                         fontSize: '1.25rem',
-                        color: 'rgba(255,255,255,0.6)',
+                        color: 'rgba(27, 42, 65,0.6)',
                         lineHeight: 1.6,
                         maxWidth: '700px',
                         margin: '0 auto 3rem auto'
@@ -173,9 +174,9 @@ const Landing = () => {
                         <button
                             onClick={() => navigate('/dashboard')}
                             style={{
-                                background: '#6366f1',
+                                background: '#2E8B57',
                                 border: 'none',
-                                color: 'white',
+                                color: '#FFFFFF',
                                 padding: '16px 40px',
                                 borderRadius: '14px',
                                 fontWeight: '800',
@@ -184,7 +185,7 @@ const Landing = () => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '12px',
-                                boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)',
+                                boxShadow: '0 10px 30px rgba(27, 42, 65, 0.4)',
                                 transition: '0.3s'
                             }}
                             onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
@@ -194,9 +195,9 @@ const Landing = () => {
                         </button>
                         <button
                             style={{
-                                background: 'rgba(255,255,255,0.05)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                color: 'white',
+                                background: 'rgba(27, 42, 65,0.05)',
+                                border: '1px solid rgba(27, 42, 65,0.1)',
+                                color: '#1E1E1E',
                                 padding: '16px 40px',
                                 borderRadius: '14px',
                                 fontWeight: '800',
@@ -204,8 +205,8 @@ const Landing = () => {
                                 cursor: 'pointer',
                                 transition: '0.3s'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(27, 42, 65,0.1)'}
+                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(27, 42, 65,0.05)'}
                         >
                             Watch Video
                         </button>
@@ -221,10 +222,10 @@ const Landing = () => {
             </section>
 
             {/* Features Grid */}
-            <section style={{ padding: '10rem 10%', background: '#080a0f' }}>
+            <section style={{ padding: '10rem 10%', background: '#F0E9DB' }}>
                 <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
                     <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '1rem' }}>The Power of 52</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '600px', margin: '0 auto' }}>A comprehensive suite of autonomous agents working in harmony to solve local manufacturing challenges.</p>
+                    <p style={{ color: 'rgba(27, 42, 65,0.5)', maxWidth: '600px', margin: '0 auto' }}>A comprehensive suite of autonomous agents working in harmony to solve local manufacturing challenges.</p>
                 </div>
 
                 <div style={{
@@ -234,37 +235,37 @@ const Landing = () => {
                 }}>
                     {features.map((f, i) => (
                         <div key={i} className="feature-card" style={{
-                            background: 'rgba(255,255,255,0.02)',
-                            border: '1px solid rgba(255,255,255,0.05)',
+                            background: 'rgba(27, 42, 65,0.02)',
+                            border: '1px solid rgba(27, 42, 65,0.05)',
                             padding: '2.5rem',
                             borderRadius: '24px',
                             transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                             cursor: 'default'
                         }}
                             onMouseOver={(e) => {
-                                e.currentTarget.style.background = 'rgba(99, 102, 241, 0.05)';
-                                e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.2)';
+                                e.currentTarget.style.background = 'rgba(27, 42, 65, 0.05)';
+                                e.currentTarget.style.borderColor = 'rgba(27, 42, 65, 0.2)';
                                 e.currentTarget.style.transform = 'translateY(-10px)';
                             }}
                             onMouseOut={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                                e.currentTarget.style.background = 'rgba(27, 42, 65,0.02)';
+                                e.currentTarget.style.borderColor = 'rgba(27, 42, 65,0.05)';
                                 e.currentTarget.style.transform = 'translateY(0)';
                             }}
                         >
                             <div style={{
-                                background: 'rgba(99, 102, 241, 0.1)',
+                                background: 'rgba(27, 42, 65, 0.1)',
                                 width: '50px',
                                 height: '50px',
                                 borderRadius: '12px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: '#6366f1',
+                                color: '#1E1E1E',
                                 marginBottom: '1.5rem'
                             }}>{f.icon}</div>
                             <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '1rem' }}>{f.title}</h3>
-                            <p style={{ color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, fontSize: '0.95rem' }}>{f.desc}</p>
+                            <p style={{ color: 'rgba(27, 42, 65,0.5)', lineHeight: 1.6, fontSize: '0.95rem' }}>{f.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -273,19 +274,19 @@ const Landing = () => {
             {/* CTA Section */}
             <section style={{ padding: '10rem 10%', textAlign: 'center' }}>
                 <div style={{
-                    background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%)',
+                    background: 'linear-gradient(180deg, rgba(27, 42, 65, 0.1) 0%, transparent 100%)',
                     padding: '5rem',
                     borderRadius: '40px',
-                    border: '1px solid rgba(99, 102, 241, 0.2)'
+                    border: '1px solid rgba(27, 42, 65, 0.2)'
                 }}>
                     <h2 style={{ fontSize: '3.5rem', fontWeight: '900', marginBottom: '1.5rem' }}>Ready to reach Nirvana?</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem auto' }}>Join the textile revolution and optimize your factory in minutes. No complex hardware required.</p>
+                    <p style={{ color: 'rgba(27, 42, 65,0.6)', fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem auto' }}>Join the textile revolution and optimize your factory in minutes. No complex hardware required.</p>
                     <button
                         onClick={() => navigate('/dashboard')}
                         style={{
-                            background: 'white',
+                            background: '#2E8B57',
                             border: 'none',
-                            color: 'black',
+                            color: '#FFFFFF',
                             padding: '18px 48px',
                             borderRadius: '16px',
                             fontWeight: '900',
@@ -302,10 +303,10 @@ const Landing = () => {
             </section>
 
             {/* Footer */}
-            <footer style={{ padding: '5rem 10%', borderTop: '1px solid rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <footer style={{ padding: '5rem 10%', borderTop: '1px solid rgba(27, 42, 65,0.05)', color: 'rgba(27, 42, 65,0.4)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Factory size={18} />
-                    <span style={{ fontWeight: '800', color: 'rgba(255,255,255,0.8)' }}>SmartFactory AI</span>
+                    <span style={{ fontWeight: '800', color: 'rgba(27, 42, 65,0.8)' }}>SmartFactory AI</span>
                 </div>
                 <div>© 2026 SmartFactory AI. Built for the Bhilwara Textile Hackathon.</div>
             </footer>

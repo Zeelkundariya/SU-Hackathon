@@ -45,7 +45,7 @@ const OwnerPortal = () => {
             <div className="absolute top-[20%] right-[10%] w-[20%] h-[20%] bg-purple-600/5 rounded-full blur-[100px]"></div>
 
             {/* Cyber Grid Overlay with Scanline Effect */}
-            <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'linear-gradient(#4f46e5 1px, transparent 1px), linear-gradient(90deg, #4f46e5 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
+            <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'linear-gradient(#1B2A41 1px, transparent 1px), linear-gradient(90deg, #1B2A41 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
             <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.03]">
                 <div className="w-full h-[5px] bg-indigo-500 blur-[2px] absolute top-[-10px] animate-scanline"></div>
             </div>
@@ -58,9 +58,9 @@ const OwnerPortal = () => {
                     animation: scanline 8s linear infinite;
                 }
                 .glass-card {
-                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+                    background: linear-gradient(135deg, rgba(27, 42, 65, 0.05) 0%, rgba(27, 42, 65, 0.01) 100%);
                     backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    border: 1px solid rgba(27, 42, 65, 0.08);
                     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
                 }
                 .glass-card:hover {
@@ -78,7 +78,7 @@ const OwnerPortal = () => {
                     left: -50%;
                     width: 200%;
                     height: 200%;
-                    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+                    background: linear-gradient(45deg, transparent, rgba(27, 42, 65,0.1), transparent);
                     transform: rotate(45deg);
                     animation: shine 4s infinite;
                 }
@@ -153,7 +153,7 @@ const OwnerPortal = () => {
                         <div className="py-20 px-8 text-center bg-white/[0.02] border border-white/10 rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
                             <div className="absolute inset-0 bg-indigo-500/[0.02] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div className="relative z-10">
-                                <div className="w-20 h-20 bg-emerald-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-emerald-500/20 shadow-[inset_0_0_20px_rgba(16,185,129,0.1)]">
+                                <div className="w-20 h-20 bg-emerald-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-emerald-500/20 shadow-[inset_0_0_20px_rgba(46, 139, 87,0.1)]">
                                     <CheckCircle size={40} className="text-emerald-500/80" />
                                 </div>
                                 <h2 className="text-2xl font-black text-white mb-3 tracking-tight">Operational Equilibrium Reached</h2>

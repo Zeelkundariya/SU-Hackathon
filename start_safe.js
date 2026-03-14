@@ -1,8 +1,8 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-const backendDir = 'C:\\Users\\zeelk\\OneDrive\\Desktop\\AI & Automation for Manufacturing SMEs\\smartfactory-ai\\backend';
-const frontendDir = 'C:\\Users\\zeelk\\OneDrive\\Desktop\\AI & Automation for Manufacturing SMEs\\smartfactory-ai\\frontend';
+const backendDir = path.join(__dirname, 'backend');
+const frontendDir = path.join(__dirname, 'frontend');
 
 function start(dir, cmd, args, env = {}) {
     console.log(`Starting ${cmd} in ${dir}...`);

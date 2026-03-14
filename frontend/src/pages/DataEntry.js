@@ -77,13 +77,13 @@ const DataEntry = () => {
     ];
 
     return (
-        <div className="dashboard-container" style={{ background: '#070b14', minHeight: '100vh', color: 'white' }}>
-            <nav className="sidebar" style={{ borderRight: '1px solid rgba(255,255,255,0.05)', background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(40px)' }}>
+        <div className="dashboard-container" style={{ background: '#070b14', minHeight: '100vh', color: '#1E1E1E' }}>
+            <nav className="sidebar" style={{ borderRight: '1px solid rgba(132, 177, 121,0.05)', background: 'rgba(199, 234, 187, 0.9)', backdropFilter: 'blur(40px)' }}>
                 <div className="logo" style={{ padding: '2.5rem 1.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{ background: 'var(--primary)', padding: '8px', borderRadius: '10px', display: 'flex' }}>
                         <Plus size={20} color="white" />
                     </div>
-                    <span style={{ fontWeight: '900', letterSpacing: '2px', color: 'white', fontSize: '1.2rem' }}>DATA HUB</span>
+                    <span style={{ fontWeight: '900', letterSpacing: '2px', color: '#1E1E1E', fontSize: '1.2rem' }}>DATA HUB</span>
                 </div>
                 <div className="nav-links" style={{ padding: '0 1rem' }}>
                     {sections.map(s => (
@@ -104,10 +104,10 @@ const DataEntry = () => {
                                 gap: '12px',
                                 padding: '12px 18px',
                                 borderRadius: '12px',
-                                color: activeSection === s.id ? 'white' : 'rgba(255,255,255,0.5)',
+                                color: activeSection === s.id ? 'white' : 'rgba(132, 177, 121,0.5)',
                                 transition: 'all 0.3s ease',
                                 cursor: 'pointer',
-                                boxShadow: activeSection === s.id ? '0 10px 15px -3px rgba(99, 102, 241, 0.3)' : 'none'
+                                boxShadow: activeSection === s.id ? '0 10px 15px -3px rgba(132, 177, 121, 0.3)' : 'none'
                             }}
                         >
                             <span style={{ display: 'flex', alignItems: 'center' }}>{s.icon}</span>
@@ -115,7 +115,7 @@ const DataEntry = () => {
                         </button>
                     ))}
 
-                    <div style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2rem' }}>
+                    <div style={{ marginTop: '2rem', borderTop: '1px solid rgba(132, 177, 121,0.05)', paddingTop: '2rem' }}>
                         <button onClick={() => navigate('/')} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', borderRadius: '12px', border: '1px solid var(--primary)', background: 'transparent', color: 'var(--primary)', cursor: 'pointer', fontWeight: '700' }}>
                             <Save size={18} /> {lang === 'EN' ? 'EXIT & VIEW' : 'बाहर निकलें'}
                         </button>
@@ -189,8 +189,8 @@ const DataEntry = () => {
 
                         {/* Workforce Card */}
                         <div id="workforce" className="glass-card" style={{ gridColumn: 'span 2' }}>
-                            <div className="card-accent" style={{ background: '#8b5cf6' }} />
-                            <h3 className="card-title"><Users size={20} color="#8b5cf6" /> Workforce & Safety Strategy</h3>
+                            <div className="card-accent" style={{ background: '#84B179' }} />
+                            <h3 className="card-title"><Users size={20} color="#84B179" /> Workforce & Safety Strategy</h3>
                             <div className="input-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
                                 <div className="input-field">
                                     <label>Active Staff</label>
@@ -213,8 +213,8 @@ const DataEntry = () => {
 
                         {/* Textile & Quality Card */}
                         <div id="textile" className="glass-card">
-                            <div className="card-accent" style={{ background: '#06b6d4' }} />
-                            <h3 className="card-title"><Briefcase size={20} color="#06b6d4" /> Textile & Quality IQ</h3>
+                            <div className="card-accent" style={{ background: '#84B179' }} />
+                            <h3 className="card-title"><Briefcase size={20} color="#84B179" /> Textile & Quality IQ</h3>
                             <div className="input-grid">
                                 <div className="input-field">
                                     <label>GSM Deviation</label>
@@ -237,8 +237,8 @@ const DataEntry = () => {
 
                         {/* Finance Card */}
                         <div id="finance" className="glass-card">
-                            <div className="card-accent" style={{ background: '#10b981' }} />
-                            <h3 className="card-title"><DollarSign size={20} color="#10b981" /> Financial Intelligence</h3>
+                            <div className="card-accent" style={{ background: '#A2CB8B' }} />
+                            <h3 className="card-title"><DollarSign size={20} color="#A2CB8B" /> Financial Intelligence</h3>
                             <div className="input-grid">
                                 <div className="input-field" style={{ gridColumn: 'span 2' }}>
                                     <label>Op Cost Daily (₹)</label>
@@ -257,8 +257,8 @@ const DataEntry = () => {
 
                         {/* Sustainability Card */}
                         <div id="sustainability" className="glass-card">
-                            <div className="card-accent" style={{ background: '#f59e0b' }} />
-                            <h3 className="card-title"><Zap size={20} color="#f59e0b" /> Sustainability Metrics</h3>
+                            <div className="card-accent" style={{ background: '#84B179' }} />
+                            <h3 className="card-title"><Zap size={20} color="#84B179" /> Sustainability Metrics</h3>
                             <div className="input-grid">
                                 <div className="input-field">
                                     <label>Solar Contrib</label>
@@ -312,14 +312,14 @@ const DataEntry = () => {
             <style>{`
                 .sidebar-link.active {
                     background: var(--primary) !important;
-                    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+                    box-shadow: 0 4px 15px rgba(132, 177, 121, 0.3);
                 }
                 .sidebar-link:hover:not(.active) {
-                    background: rgba(255,255,255,0.05) !important;
+                    background: rgba(132, 177, 121,0.05) !important;
                 }
                 .mini-btn {
-                    background: rgba(255,255,255,0.05);
-                    border: 1px solid rgba(255,255,255,0.1);
+                    background: rgba(132, 177, 121,0.05);
+                    border: 1px solid rgba(132, 177, 121,0.1);
                     color: white;
                     padding: 10px 20px;
                     border-radius: 10px;
@@ -332,18 +332,18 @@ const DataEntry = () => {
                     transition: 0.2s;
                 }
                 .mini-btn:hover {
-                    background: rgba(255,255,255,0.1);
-                    border-color: rgba(255,255,255,0.2);
+                    background: rgba(132, 177, 121,0.1);
+                    border-color: rgba(132, 177, 121,0.2);
                 }
                 .mini-btn.danger:hover {
                     background: rgba(239, 68, 68, 0.1);
-                    border-color: #ef4444;
-                    color: #ef4444;
+                    border-color: #1E1E1E;
+                    color: #1E1E1E;
                 }
                 .glass-card {
-                    background: rgba(15, 23, 42, 0.6);
+                    background: rgba(199, 234, 187, 0.6);
                     backdrop-filter: blur(16px);
-                    border: 1px solid rgba(255,255,255,0.05);
+                    border: 1px solid rgba(132, 177, 121,0.05);
                     border-radius: 20px;
                     padding: 2rem;
                     position: relative;
@@ -351,7 +351,7 @@ const DataEntry = () => {
                     transition: 0.3s;
                 }
                 .glass-card:hover {
-                    border-color: rgba(255,255,255,0.1);
+                    border-color: rgba(132, 177, 121,0.1);
                     transform: translateY(-5px);
                 }
                 .card-accent {
@@ -385,14 +385,14 @@ const DataEntry = () => {
                     font-size: 0.7rem;
                     text-transform: uppercase;
                     letter-spacing: 1px;
-                    color: rgba(255,255,255,0.4);
+                    color: rgba(132, 177, 121,0.4);
                     font-weight: 800;
                     white-space: normal;
                     line-height: 1.4;
                 }
                 .input-field input {
-                    background: rgba(255,255,255,0.03);
-                    border: 1px solid rgba(255,255,255,0.08);
+                    background: rgba(132, 177, 121,0.03);
+                    border: 1px solid rgba(132, 177, 121,0.08);
                     color: white;
                     padding: 12px 16px;
                     border-radius: 10px;
@@ -404,7 +404,7 @@ const DataEntry = () => {
                 .input-field input:focus {
                     outline: none;
                     border-color: var(--primary);
-                    background: rgba(99, 102, 241, 0.05);
+                    background: rgba(132, 177, 121, 0.05);
                 }
                 .huge-primary-btn {
                     background: var(--primary);
@@ -415,12 +415,12 @@ const DataEntry = () => {
                     font-size: 1.1rem;
                     font-weight: 800;
                     cursor: pointer;
-                    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+                    box-shadow: 0 15px 35px rgba(132, 177, 121, 0.4);
                     transition: 0.3s;
                 }
                 .huge-primary-btn:hover {
                     transform: translateY(-3px);
-                    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.5);
+                    box-shadow: 0 20px 40px rgba(132, 177, 121, 0.5);
                 }
                 .huge-primary-btn:disabled {
                     opacity: 0.5;

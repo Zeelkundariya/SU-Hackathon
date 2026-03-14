@@ -1,0 +1,422 @@
+﻿        {
+          activeTab === 'maintenance' && (
+            <div className="maintenance-panel animate-fade-in mesh-bg" style={{ padding: '2rem', borderRadius: '30px', minHeight: '100vh' }}>
+
+              {/* 1. Header & Navigation */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2.5rem' }}>
+                <div>
+                  <h1 className="text-gradient-primary" style={{ fontSize: '2.5rem', fontWeight: '900', marginBottom: '0.5rem' }}>Predictive Maintenance</h1>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div className="pulse" style={{ width: '8px', height: '8px', background: '#A2CB8B', borderRadius: '50%' }}></div> Live Telemetry Active</div>
+                    <span>â€¢</span>
+                    <div>Factory: <strong>Bhilwara Cluster - A</strong></div>
+                    <span>â€¢</span>
+                    <div>Shift: <strong style={{ color: 'var(--accent)' }}>{currentShift}</strong></div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    className={`btn-primary ${isScanning ? 'pulse' : ''}`}
+                    style={{ background: 'rgba(132, 177, 121,0.05)', border: '1px solid rgba(132, 177, 121,0.1)', backdropFilter: 'blur(10px)', color: '#fff' }}
+                    onClick={() => {
+                      setIsScanning(true);
+                      setSystemEvents(prev => [{ id: Date.now(), time: new Date().toLocaleTimeString(), msg: 'Full System Scan Initiated...', type: 'info' }, ...prev]);
+                      setTimeout(() => {
+                        setIsScanning(false);
+                        setSystemEvents(prev => [{ id: Date.now(), time: new Date().toLocaleTimeString(), msg: 'System integrity verified. All nodes responding.', type: 'success' }, ...prev]);
+                      }, 3000);
+                    }}
+                  >
+                    <BrainCircuit size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> {isScanning ? 'Scanning...' : 'Full System Scan'}
+                  </button>
+                  <button className="btn-primary" onClick={() => setShowShiftModal(true)}>
+                    <Zap size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> Optimize Power
+                  </button>
+                </div>
+              </div>
+
+              {/* 2. Advanced KPI Dashboard */}
+              <div className="stats-grid" style={{ gap: '1.5rem', marginBottom: '2rem' }}>
+                <div className="premium-card" style={{ padding: '1.5rem', borderBottom: '3px solid #A2CB8B' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                    <div className="glass-icon"><Clock size={24} color="#A2CB8B" /></div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div className="badge badge-success">Optimal</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Remaining Useful Life</div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: '900' }}>{advancedPdM.remainingLifeHours || '1930'}<span style={{ fontSize: '1rem', color: 'var(--text-muted)', marginLeft: '4px' }}>Hrs</span></div>
+                  <div style={{ marginTop: '15px', fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Progress to Overhaul</span>
+                    <span style={{ color: '#A2CB8B' }}>92% Healthy</span>
+                  </div>
+                  <div className="maturity-bar-bg"><div className="maturity-bar-fill" style={{ width: '92%', background: '#A2CB8B' }}></div></div>
+                </div>
+
+                <div className="premium-card" style={{ padding: '1.5rem', borderBottom: '3px solid #84B179' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                    <div className="glass-icon"><ShieldAlert size={24} color="#84B179" /></div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div className="badge badge-warning" style={{ color: '#1E1E1E' }}>Attention</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Cumulative Failure Risk</div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: '900' }}>{advancedPdM.failureProbability || '30.0'}<span style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>%</span></div>
+                  <div style={{ marginTop: '15px', fontSize: '0.85rem', color: '#1E1E1E', fontWeight: '800' }}>
+                    Projected Loss: {advancedPdM.productionLossEstimate || 'â‚¹50,000'}
+                  </div>
+                </div>
+
+                <div className="premium-card" style={{ padding: '1.5rem', borderBottom: '3px solid #84B179' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                    <div className="glass-icon"><Activity size={24} color="#84B179" /></div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div className="badge" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#1E1E1E' }}>Stable</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Fleet Health Score</div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: '900' }}>{advancedPdM.healthScore || '80.0'}<span style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>%</span></div>
+                  <div className="maturity-bar-bg"><div className="maturity-bar-fill" style={{ width: `${advancedPdM.healthScore || 80}%`, background: '#84B179' }}></div></div>
+                </div>
+
+                <div className="premium-card" style={{ padding: '1.5rem', borderBottom: '3px solid #84B179' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                    <div className="glass-icon"><DollarSign size={24} color="#84B179" /></div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div className="badge" style={{ background: 'rgba(132, 177, 121, 0.1)', color: '#1E1E1E' }}>+12.5% ROI</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>AI Savings Pipeline</div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: '900' }}>{advancedPdM.netSavingsPotential || 'â‚¹75,000'}</div>
+                  <div style={{ marginTop: '10px', fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                    Intervention recommended to prevent downtime costing <span style={{ color: '#fff' }}>â‚¹4,200/hr</span>.
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Fleet Analytics & Live Sensors */}
+              <div className="charts-grid" style={{ gap: '1.5rem', marginBottom: '2rem', gridTemplateColumns: 'minmax(0, 1fr) 400px' }}>
+                <div className="premium-card" style={{ padding: '2rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <h3 className="section-title"><Layout size={20} color="var(--primary)" /> Machine Fleet Intelligence</h3>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', gap: '15px' }}>
+                      <span>ðŸŸ¢ Healthy: 4</span>
+                      <span>ðŸŸ¡ Warning: 1</span>
+                      <span>ðŸ”´ Critical: 1</span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                    {fleetData.map((m, i) => (
+                      <div key={i} className="ecosystem-item" style={{ border: `1px solid ${m.color}20`, padding: '1rem', background: 'rgba(132, 177, 121,0.01)' }}>
+                        <div className="node-dot" style={{ background: m.color }}>
+                          <div className="node-pulse" style={{ background: m.color }}></div>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                            <span style={{ fontWeight: '700', fontSize: '0.9rem' }}>{m.name}</span>
+                            <span style={{ color: m.color, fontWeight: '900' }}>{m.score}%</span>
+                          </div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                            <span>{m.status}</span>
+                            <span>{m.trend}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="premium-card" style={{ padding: '2rem' }}>
+                  <h3 className="section-title"><Waves size={20} color="#84B179" /> Real-Time Telemetry</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                    {[
+                      { icon: <Thermometer size={18} />, label: 'Chasis Temperature', value: liveSensors.temp, unit: 'Â°C', color: '#1E1E1E', trend: liveSensors.tempTrend },
+                      { icon: <Activity size={18} />, label: 'Spindle Vibration', value: liveSensors.vibration, unit: ' mm/s', color: '#1E1E1E', trend: liveSensors.vibrationTrend },
+                      { icon: <Wind size={18} />, label: 'Hydraulic Pressure', value: liveSensors.pressure, unit: ' PSI', color: '#1E1E1E', trend: 2 },
+                      { icon: <Zap size={18} />, label: 'Bus Power Consumption', value: liveSensors.power, unit: ' kW', color: '#A2CB8B', trend: -0.5 },
+                    ].map((s, i) => (
+                      <div key={i} style={{ background: 'rgba(132, 177, 121,0.03)', padding: '1.2rem', borderRadius: '15px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                            <div style={{ color: s.color }}>{s.icon}</div> {s.label}
+                          </div>
+                          <div style={{ fontSize: '1.2rem', fontWeight: '900' }}>{s.value}<span style={{ fontSize: '0.8rem', opacity: 0.5 }}>{s.unit}</span></div>
+                        </div>
+                        <div style={{ position: 'relative', height: '30px' }}>
+                          <svg width="100%" height="30" viewBox="0 0 200 30" preserveAspectRatio="none">
+                            <path d={`M 0 15 Q 25 ${15 - s.trend * 10} 50 15 T 100 15 T 150 15 T 200 15`} fill="none" stroke={s.color} strokeWidth="2" strokeLinecap="round">
+                              <animate attributeName="d" dur="3s" repeatCount="indefinite" values={`M 0 15 Q 25 ${15 - s.trend * 10} 50 15 T 100 15 T 150 15 T 200 15; M 0 15 Q 25 ${15 + s.trend * 10} 50 15 T 100 15 T 150 15 T 200 15; M 0 15 Q 25 ${15 - s.trend * 10} 50 15 T 100 15 T 150 15 T 200 15`} />
+                            </path>
+                          </svg>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. Failure Prediction & Smart Recommendations */}
+              <div className="charts-grid" style={{ gap: '1.5rem', marginBottom: '2rem' }}>
+                <div className="premium-card" style={{ padding: '2rem' }}>
+                  <h3 className="section-title"><TrendingUp size={20} color="#84B179" /> Failure Probability Waveform</h3>
+                  <div style={{ height: '300px', width: '100%' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={failureTrend}>
+                        <defs>
+                          <linearGradient id="premiumFailColor" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#84B179" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#84B179" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(132, 177, 121,0.05)" vertical={false} />
+                        <XAxis dataKey="time" stroke="#64748b" fontSize={11} axisLine={false} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={11} axisLine={false} tickLine={false} domain={[0, 100]} />
+                        <Tooltip
+                          contentStyle={{ background: 'rgba(199, 234, 187, 0.9)', border: '1px solid rgba(132, 177, 121,0.1)', borderRadius: '12px', backdropFilter: 'blur(10px)' }}
+                          itemStyle={{ color: '#fff' }}
+                        />
+                        <Area type="monotone" dataKey="risk" stroke="#84B179" strokeWidth={3} fillOpacity={1} fill="url(#premiumFailColor)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                <div className="premium-card" style={{ padding: '2rem', background: 'radial-gradient(circle at top right, rgba(132, 177, 121, 0.2), transparent)' }}>
+                  <div style={{ display: 'flex', gap: '15px', marginBottom: '2rem' }}>
+                    <div className="glass-icon" style={{ background: 'rgba(132, 177, 121, 0.2)', borderColor: 'var(--primary)' }}><BrainCircuit size={28} color="var(--primary)" /></div>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: '900' }}>AI Strategic Advisory</h3>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'bold' }}>Neural Core Processing...</div>
+                    </div>
+                  </div>
+
+                  <div style={{ borderLeft: '2px solid var(--primary)', paddingLeft: '20px', marginBottom: '2.5rem' }}>
+                    <h4 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '10px' }}>Urgent Lubrication Required: Loom #1</h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                      Diagnostic resonance detected at <span style={{ color: '#fff', fontWeight: 'bold' }}>8.2kHz</span>. High friction on spindle drive assembly. Estimated failure window: <span style={{ color: '#1E1E1E', fontWeight: 'bold' }}>36-48 Hrs</span>.
+                    </p>
+                  </div>
+
+                  <div style={{ background: 'rgba(162, 203, 139, 0.05)', border: '1px solid rgba(162, 203, 139, 0.1)', padding: '1rem', borderRadius: '12px', marginBottom: '2rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: '#A2CB8B', fontWeight: 'bold' }}>
+                      <CheckCircle size={16} /> Projected Outcome
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '5px' }}>
+                      Immediate intervention saves <span style={{ color: '#fff' }}>â‚¹42,000</span> in emergency repair logistics.
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      className="btn-primary"
+                      style={{
+                        flex: 1,
+                        boxShadow: '0 0 20px rgba(132, 177, 121, 0.4)',
+                        background: workOrderStep === 2 ? '#A2CB8B' : 'var(--primary)',
+                        borderColor: workOrderStep === 2 ? '#A2CB8B' : 'var(--primary)'
+                      }}
+                      onClick={async () => {
+                        if (workOrderStep === 2) return;
+                        setWorkOrderStep(1);
+                        const req = await triggerOwnerRequest('Maintenance AI', 'Emergency Repair', 'Urgent: Loom #1 Spindle Motor friction threshold exceeded. Requires immediate lubrication.');
+                        if (req?._id) {
+                          setActiveRequestIds(p => ({ ...p, machineHealth: req._id }));
+                          setMachineHealthState(1);
+                          setWorkOrderStep(2);
+                        }
+                      }}
+                    >
+                      {workOrderStep === 0 ? 'Initiate Work Order' : workOrderStep === 1 ? 'Sending Signal...' : 'Ticket Dispatched'}
+                    </button>
+                    <button
+                      className="btn-primary"
+                      style={{ background: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)', boxShadow: 'none' }}
+                      onClick={() => alert("Downloading Neural Diagnostic Logs... (CSV/8.4MB)")}
+                    >
+                      Analysis Logs
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. Factory Floor Digital Twin (High-Tech Version) */}
+              <div className="premium-card" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+                  <h3 className="section-title" style={{ fontSize: '1.4rem' }}><Map size={24} color="var(--primary)" /> Shop Floor Digital Twin (Edge Sync)</h3>
+                  <div style={{ background: 'rgba(132, 177, 121,0.05)', padding: '8px 16px', borderRadius: '10px', fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div className="pulse" style={{ width: '8px', height: '8px', background: 'var(--primary)', borderRadius: '50%' }}></div>
+                    15ms Edge Latency | Bhilwara Hub
+                  </div>
+                </div>
+
+                <div style={{
+                  height: '450px',
+                  background: 'rgba(199, 234, 187, 0.5)',
+                  borderRadius: '24px',
+                  border: '1px solid rgba(132, 177, 121,0.08)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  {/* Grid Pattern Overlay */}
+                  <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(132, 177, 121,0.05) 1px, transparent 1px)', backgroundSize: '30px 30px', pointerEvents: 'none' }}></div>
+                  <div className="animate-scan" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'linear-gradient(rgba(132, 177, 121, 0.05) 0%, transparent 100%)', opacity: 0.3 }}></div>
+
+                  {/* Dynamic Floor Grid */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gridTemplateRows: 'repeat(2, 1fr)',
+                    gap: '4rem',
+                    padding: '3rem',
+                    width: '100%',
+                    height: '100%'
+                  }}>
+                    {fleetData.map((m, i) => (
+                      <div key={i} className="premium-card" style={{
+                        background: 'rgba(199, 234, 187, 0.8)',
+                        border: `1px solid ${m.color}40`,
+                        padding: '1.2rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '12px',
+                        cursor: 'pointer',
+                        transform: (m.status === 'Critical') ? 'scale(1.05)' : 'none',
+                        boxShadow: (m.status === 'Critical') ? `0 0 30px ${m.color}30` : 'none'
+                      }}>
+                        <div style={{ fontSize: '0.65rem', color: m.color, fontWeight: '900', letterSpacing: '2px' }}>{m.type}</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#fff' }}>{m.id}</div>
+
+                        {/* 360 Health Ring */}
+                        <div style={{ position: 'relative', width: '60px', height: '60px' }}>
+                          <svg width="60" height="60" viewBox="0 0 60 60">
+                            <circle cx="30" cy="30" r="25" fill="none" stroke="rgba(132, 177, 121,0.05)" strokeWidth="4" />
+                            <circle cx="30" cy="30" r="25" fill="none" stroke={m.color} strokeWidth="4"
+                              strokeDasharray={`${(m.score / 100) * 157}, 157`}
+                              strokeLinecap="round"
+                              transform="rotate(-90 30 30)" />
+                          </svg>
+                          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 'bold' }}>{m.score}%</div>
+                        </div>
+
+                        <div className="badge" style={{ background: `${m.color}15`, color: m.color }}>{m.status}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 6. Lower Dashboard (Alerts & Timeline Mix) */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div className="premium-card" style={{ padding: '2rem' }}>
+                  <h3 className="section-title"><Bell size={20} color="#84B179" /> System Events & Security</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {systemEvents.slice(0, 4).map((e, i) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: 'rgba(132, 177, 121,0.02)', borderRadius: '10px' }}>
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: e.type === 'critical' || e.type === 'danger' ? '#84B179' : e.type === 'warning' ? '#84B179' : '#84B179' }}></div>
+                          <span style={{ fontSize: '0.85rem' }}>{e.msg}</span>
+                        </div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{e.time}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="premium-card" style={{ padding: '2rem' }}>
+                  <h3 className="section-title"><History size={20} color="var(--primary)" /> Service Ledger</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    {ledgerData.map((s, i) => (
+                      <div key={i} style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+                        <div style={{ textAlign: 'center', minWidth: '50px' }}>
+                          <div style={{ fontSize: '1.2rem', fontWeight: '900', color: 'var(--primary)' }}>{s.date.split(' ')[0]}</div>
+                          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>{s.date.split(' ')[1]}</div>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '4px' }}>{s.task}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Technician: {s.tech} â€¢ Status: <span style={{ color: '#A2CB8B' }}>{s.res}</span></div>
+                        </div>
+                      </div>
+                    ))}
+                    <button style={{ background: 'transparent', border: 'none', color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', cursor: 'pointer', textAlign: 'left', padding: 0 }}>+ View Archive Ledger</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 7. Strategic Maintenance Metrics */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.5fr) 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
+                <div className="premium-card" style={{ padding: '2rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <h3 className="section-title"><Package size={20} color="var(--accent)" /> Maintenance-Production Link</h3>
+                    <div className="badge badge-success">Live: +3.1% Output</div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+                    <div style={{ padding: '1.2rem', background: 'rgba(132, 177, 121,0.02)', borderRadius: '15px', borderLeft: '3px solid var(--primary)' }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>Units Produced</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>{Math.floor((manualData.actualOutput || 960) * 1.03)} <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>/ 1200</span></div>
+                      <div className="maturity-bar-bg" style={{ height: '4px', marginTop: '10px' }}><div className="maturity-bar-fill" style={{ width: '82%', background: 'var(--primary)' }}></div></div>
+                    </div>
+                    <div style={{ padding: '1.2rem', background: 'rgba(132, 177, 121,0.02)', borderRadius: '15px', borderLeft: '3px solid var(--accent)' }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>PdM Efficiency</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>98.4%</div>
+                      <div className="maturity-bar-bg" style={{ height: '4px', marginTop: '10px' }}><div className="maturity-bar-fill" style={{ width: '98%', background: 'var(--accent)' }}></div></div>
+                    </div>
+                    <div style={{ padding: '1.2rem', background: 'rgba(132, 177, 121,0.02)', borderRadius: '15px', borderLeft: '3px solid #84B179' }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>Downtime Prevented</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>12.5 <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Hrs</span></div>
+                      <div className="maturity-bar-bg" style={{ height: '4px', marginTop: '10px' }}><div className="maturity-bar-fill" style={{ width: '75%', background: '#84B179' }}></div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="premium-card" style={{ padding: '2rem', background: 'linear-gradient(135deg, rgba(244, 63, 94, 0.05) 0%, transparent 100%)', borderLeft: '4px solid #84B179' }}>
+                  <h3 className="section-title"><DollarSign size={20} color="#84B179" /> Cost Interference Simulation</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Reactive Repair Cost</span>
+                      <span style={{ fontWeight: 'bold' }}>â‚¹{advancedPdM.reactiveCostEstimate || '1,50,000'}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
+                      <span style={{ color: '#A2CB8B' }}>PdM Intervention Cost</span>
+                      <span style={{ fontWeight: 'bold' }}>â‚¹{advancedPdM.pdmInterventionCost || '35,000'}</span>
+                    </div>
+                    <div style={{ height: '1px', background: 'rgba(132, 177, 121,0.1)', margin: '5px 0' }}></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: '900', color: 'var(--accent)' }}>Net ROI Potential</span>
+                      <span style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--accent)' }}>â‚¹{budgetApplied ? (parseInt((String(advancedPdM.netSavingsPotential || '115000')).replace(/[^\d]/g, '')) + 12500).toLocaleString('en-IN') : (advancedPdM.netSavingsPotential || '1,15,000')}</span>
+                    </div>
+                    <button
+                      className={`btn-primary ${isBudgeting ? 'pulse' : ''}`}
+                      style={{
+                        marginTop: '10px',
+                        background: budgetApplied ? 'rgba(162, 203, 139, 0.1)' : 'rgba(244, 63, 94, 0.1)',
+                        border: `1px solid ${budgetApplied ? '#A2CB8B' : '#84B179'}`,
+                        color: budgetApplied ? '#A2CB8B' : '#84B179'
+                      }}
+                      onClick={() => {
+                        if (budgetApplied) return;
+                        setIsBudgeting(true);
+                        setTimeout(() => {
+                          setIsBudgeting(false);
+                          setBudgetApplied(true);
+                          setSystemEvents(prev => [{ id: Date.now(), time: new Date().toLocaleTimeString(), msg: 'Neural Budgeting Applied: Maintenance ROI optimized.', type: 'success' }, ...prev]);
+                        }, 2000);
+                      }}
+                    >
+                      {isBudgeting ? 'Calculating Assets...' : budgetApplied ? 'Budget Optimized' : 'Apply Neural Budgeting'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {renderAgentGrid(['Predictive Maintenance'], 'Maintenance Execution AI Library (52 Agents)')}
+            </div>
+          )
+        }
+

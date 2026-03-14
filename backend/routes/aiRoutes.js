@@ -48,6 +48,8 @@ const { calculateClusterEfficiency } = require("../ai/clusterIntelligence");
 const { projectProfitMargin } = require("../ai/profitProjection");
 const { evaluateBuyerRisk } = require("../ai/creditInsurance");
 const { calculateSafetyScore } = require("../ai/safetyCompliance");
+const { calculateAdvancedPdM } = require("../ai/advancedPdM");
+
 
 
 
@@ -734,7 +736,42 @@ router.post("/safety", async (req, res) => {
 });
 
 // --- PS-005 Advanced Automation ---
+router.post("/advanced-pdm", async (req, res) => {
+  try {
+    const { 
+      vibration, 
+      temp, 
+      uptime, 
+      ambientTemp, 
+      acousticFreq,
+      powerConsumption,
+      speedRpm,
+      humidity,
+      dustLevel
+    } = req.body;
+    
+    // Fallback values from DB if not provided
+    const machines = await Machine.find();
+    const dbUptime = machines.reduce((acc, m) => acc + (m.uptimeHours || 0), 0) / (machines.length || 1);
+    
+    res.json(calculateAdvancedPdM({
+      vibration: vibration !== undefined ? vibration : 45,
+      temp: temp !== undefined ? temp : 35,
+      uptime: uptime !== undefined ? uptime : dbUptime,
+      ambientTemp: ambientTemp !== undefined ? ambientTemp : 38,
+      acousticFreq: acousticFreq !== undefined ? acousticFreq : 2,
+      powerConsumption: powerConsumption !== undefined ? powerConsumption : 4.2,
+      speedRpm: speedRpm !== undefined ? speedRpm : 1800,
+      humidity: humidity !== undefined ? humidity : 65,
+      dustLevel: dustLevel !== undefined ? dustLevel : 150
+    }));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.post("/predict-downtime", async (req, res) => {
+
   try {
     const { vibration, temp, uptime } = req.body;
     res.json(predictDowntime({ vibration, temp, uptimeHours: uptime }));
